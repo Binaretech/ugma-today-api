@@ -1,7 +1,7 @@
 from rest_framework.authtoken import views
 from rest_framework.urls import url
-from .views.auth import AuthViewSet
-
+from .views.register import register
 urlpatterns = [
-    url('login/', AuthViewSet.as_view({'post': 'login'})),
+    url('login/', views.obtain_auth_token),
+    url('register/', register)
 ]
