@@ -1,7 +1,7 @@
 from rest_framework.urls import url
-from .views.register import register, AuthViewSet 
+from .views.auth import register, Authentication 
 
 urlpatterns = [
-    url('login/', AuthViewSet.as_view()),
+    url('login/', Authentication.as_view()),
     url('register/', register)
 ]
