@@ -11,6 +11,9 @@ jobs:
     - uses: actions/checkout@v1
     - name: Running Containers
       run: docker-compose up -d
+    - name: Running migrations
+      run: |
+        docker-compose exec -T api ./manage.py makemigrations
+        docker-compose exec -T api ./manage.py migrate
     - name: Run tests
-      run: docker-compose exec -T api ./manage.py test
-        
+      run: docker-compose exec -T api ./manage.py test        

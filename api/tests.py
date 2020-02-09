@@ -12,28 +12,33 @@ def randomString(stringLength=10):
 class AuthViewTests(TestCase):
     def test_register(self):
         response = self.client.post('/api/register/', data={
-            'username': randomString(),
-            'password': randomString(),
-            'email': randomString()+'@'+randomString()+'.com'
-        })
+            'username': 'test_user',
+            'password': 'test_password',
+            'profile': {
+                'name': randomString(),
+                'lastname': randomString(),
+                'email': randomString()+'@'+randomString()+'.com'
+            }
+        }, content_type='application/json')
 
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 201)
 
     def test_login(self):
-        username = randomString()
-        password = randomString()
         response = self.client.post('/api/register/', data={
-            'username': username,
-            'password': password,
-            'email': randomString()+'@'+randomString()+'.com'
-        })
+            'username': 'test_user',
+            'password': 'test_password',
+            'profile': {
+                'name': randomString(),
+                'lastname': randomString(),
+                'email': randomString()+'@'+randomString()+'.com'
+            }
+        }, content_type='application/json')
 
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 201)
 
         response = self.client.post('/api/login/', data={
-            'username': username,
-            'password': password,
-            'email': randomString()+'@'+randomString()+'.com'
+            'username': 'test_user',
+            'password': 'test_password',
         })
 
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 200, response.data)

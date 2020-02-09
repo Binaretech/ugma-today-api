@@ -10,13 +10,13 @@ from django.db import transaction
 def register(request):
     user = UserSerializer(data=request.data)
     if not user.is_valid():
-        return Response(user.errors)
+        return Response(user.errors, status=400)
     user.save()
     token = Token.objects.create(user=user.instance)
     return Response({
         'token': token.key,
         'user': user.data,
-    })
+    }, status=201)
 
 
 class Authentication(ObtainAuthToken):
