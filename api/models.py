@@ -17,6 +17,6 @@ class Profile(models.Model):
 
 
 class Post(models.Model):
-    user = models.ForeignKey(User, models.SET_NULL)
+    user = models.ForeignKey(User, models.SET_NULL, null=True)
     title = models.CharField(max_length=128)
     content = models.TextField()

@@ -1,9 +1,12 @@
+from rest_framework import views, viewsets
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from ..serializers import UserSerializer, ProfileSerializer
+from .serializers import UserSerializer, PostSerializer, ProfileSerializer
 from rest_framework.authtoken.models import Token
 from rest_framework.authtoken.views import ObtainAuthToken
 from django.db import transaction
+from .models import Post
+from rest_framework.pagination import PageNumberPagination
 
 
 @api_view(['POST'])
@@ -31,3 +34,21 @@ class Authentication(ObtainAuthToken):
             'token': token.key,
             'user': UserSerializer(instance=user).data
         })
+
+
+class UserViewSet(views.APIView):
+    def get(self, request):
+        return Response(UserSerializer(instance=request.user).data)
+
+
+class PostViewSet(viewsets.ViewSet):
+    def index(self, request):
+        return PageNumberPagination(PostSerializer(Post.objects.all(), many=True).data)
+
+    def store(self, request):
+        post = PostSerializer(data=request.data)
+        if not post.is_valid():
+            return Response(post.errors)
+        post.user = request.user
+        post.save()
+        return Response(post.data)
