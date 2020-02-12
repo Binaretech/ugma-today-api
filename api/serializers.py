@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import User, Profile
+from .models import User, Profile, Post
 from django.db import transaction
 
 
@@ -26,3 +26,9 @@ class UserSerializer(serializers.ModelSerializer):
             Profile.objects.create(user=user, **validated_data['profile'])
 
         return user
+
+
+class PostSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Post
+        exclude = ['user']

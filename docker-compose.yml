@@ -8,7 +8,6 @@ services:
         volumes: 
             - .:/app
         working_dir: /app
-        command: ["./manage.py", "runserver", "0:80"]
     db:
         image: postgres
         expose:
