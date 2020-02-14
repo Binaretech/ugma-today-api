@@ -41,9 +41,12 @@ class UserViewSet(views.APIView):
         return Response(UserSerializer(instance=request.user).data)
 
 
-class PostViewSet(viewsets.ViewSet):
+class PostViewSet(PageNumberPagination, viewsets.ViewSet):
     def index(self, request):
-        return PageNumberPagination(PostSerializer(Post.objects.all(), many=True).data)
+        return Response(self.paginate_queryset(PostSerializer(Post.objects.all(), many=True).data, request))
+
+    def show(self, request, id):
+        return Response(Post.objects.get(id=id))
 
     def store(self, request):
         post = PostSerializer(data=request.data)
@@ -52,3 +55,8 @@ class PostViewSet(viewsets.ViewSet):
         post.user = request.user
         post.save()
         return Response(post.data)
+
+    def destroy(self, request, id):
+        post = Post.objects.get(id=id)
+        post.delete()
+        return Response("deleted")
