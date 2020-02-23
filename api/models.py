@@ -13,4 +13,10 @@ class Profile(models.Model):
     name = models.CharField(max_length=50)
     lastname = models.CharField(max_length=50)
     email = models.EmailField()
-    user = models.OneToOneField(User, models.CASCADE)
+    user = models.OneToOneField(User, models.CASCADE, primary_key=True)
+
+
+class Post(models.Model):
+    user = models.ForeignKey(User, models.SET_NULL, null=True)
+    title = models.CharField(max_length=128)
+    content = models.TextField()
