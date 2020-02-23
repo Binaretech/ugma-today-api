@@ -5,6 +5,7 @@ from .serializers import UserSerializer, PostSerializer, ProfileSerializer
 from rest_framework.authtoken.models import Token
 from rest_framework.authtoken.views import ObtainAuthToken
 from django.db import transaction
+from rest_framework import status
 from .models import Post
 from rest_framework.pagination import PageNumberPagination
 
@@ -19,7 +20,7 @@ def register(request):
     return Response({
         'token': token.key,
         'user': user.data,
-    }, status=201)
+    }, status.HTTP_201_CREATED)
 
 
 class Authentication(ObtainAuthToken):
@@ -43,24 +44,34 @@ class UserViewSet(views.APIView):
 
 class PostViewSet(viewsets.ViewSet, PageNumberPagination):
     def index(self, request):
-        return self.get_paginated_response(self.paginate_queryset(PostSerializer(Post.objects.all(), many=True).data, request))
+        return self.get_paginated_response(
+            self.paginate_queryset(PostSerializer(Post.objects.all(), many=True).data, request))
 
     def show(self, request, id):
         try:
             post = Post.objects.get(id=id)
             return Response(PostSerializer(instance=post))
-        except Exception as e:
-            return Response({'error': True, 'message': 'Publicacion no encontrada'}, 404)
+        except:
+            return Response({'error': True, 'message': 'Publicacion no encontrada'},
+                            status.HTTP_404_NOT_FOUND)
 
     def store(self, request):
-        post = PostSerializer(data=request.data)
-        if not post.is_valid():
-            return Response(post.errors)
-        post.user = request.user
-        post.save()
-        return Response(post.data)
+        try:
+            post = PostSerializer(data=request.data)
+            if not post.is_valid():
+                return Response(post.errors)
+            post.user = request.user
+            post.save()
+            return Response(post.data, status.HTTP_201_CREATED)
+        except:
+            return Response({'error': True, 'message': 'Error al guardar publicación'},
+                            status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     def destroy(self, request, id):
-        post = Post.objects.get(id=id)
-        post.delete()
-        return Response("deleted")
+        try:
+            post = Post.objects.get(id=id)
+            post.delete()
+            return Response({'message': 'Publicación eliminada'})
+        except:
+            return Response({'error': True, 'message': 'Ha ocurrido un error'},
+                            status.HTTP_500_INTERNAL_SERVER_ERROR)

@@ -1,5 +1,5 @@
 from django.test import TestCase
-from django.urls import reverse
+from rest_framework import status
 import random
 import string
 
@@ -34,11 +34,55 @@ class AuthViewTests(TestCase):
             }
         }, content_type='application/json')
 
-        self.assertEqual(response.status_code, 201)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
         response = self.client.post('/api/login/', data={
             'username': 'test_user',
             'password': 'test_password',
         })
 
-        self.assertEqual(response.status_code, 200, response.data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+
+class PostViewSetTests(TestCase):
+    def test_index(self):
+        response = self.client.get('/api/post/')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_store(self):
+        data = {
+            'title': randomString(),
+            'content': randomString(),
+        }
+        response = self.client.post('/api/post/', data, 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+    def test_show_not_found(self):
+        response = self.client.get('/api/post/1/')
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_show_not_found(self):
+        response = self.client.get('/api/post/1/')
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_show(self):
+        data = {
+            'title': randomString(),
+            'content': randomString(),
+        }
+        response = self.client.post('/api/post/', data, 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+        response = self.client.get('/api/post/1/')
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_delete(self):
+        data = {
+            'title': randomString(),
+            'content': randomString(),
+        }
+        response = self.client.post('/api/post/', data, 'application/json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+        response = self.client.delete('/api/post/1/')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
