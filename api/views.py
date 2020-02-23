@@ -41,12 +41,16 @@ class UserViewSet(views.APIView):
         return Response(UserSerializer(instance=request.user).data)
 
 
-class PostViewSet(PageNumberPagination, viewsets.ViewSet):
+class PostViewSet(viewsets.ViewSet, PageNumberPagination):
     def index(self, request):
-        return Response(self.paginate_queryset(PostSerializer(Post.objects.all(), many=True).data, request))
+        return self.get_paginated_response(self.paginate_queryset(PostSerializer(Post.objects.all(), many=True).data, request))
 
     def show(self, request, id):
-        return Response(Post.objects.get(id=id))
+        try:
+            post = Post.objects.get(id=id)
+            return Response(PostSerializer(instance=post))
+        except Exception as e:
+            return Response({'error': True, 'message': 'Publicacion no encontrada'}, 404)
 
     def store(self, request):
         post = PostSerializer(data=request.data)

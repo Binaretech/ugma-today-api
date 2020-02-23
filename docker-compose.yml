@@ -7,7 +7,11 @@ services:
             - 80:80
         volumes: 
             - .:/app
+        depends_on: 
+            -   'db'
+        
         working_dir: /app
+        command: ["./manage.py", "runserver", "0:80"]
     db:
         image: postgres
         expose:
@@ -19,6 +23,8 @@ services:
         image: dpage/pgadmin4
         ports: 
             -   4000:80
+        depends_on: 
+            -   'db'
         environment: 
             PGADMIN_DEFAULT_EMAIL: ugma-today
             PGADMIN_DEFAULT_PASSWORD: secret
