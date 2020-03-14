@@ -44,16 +44,16 @@ class CommentSerializer(serializers.ModelSerializer):
 
 class PostSerializer(serializers.ModelSerializer):
     user = UserSerializer(many=False, read_only=True)
-    comments = serializers.SerializerMethodField()
+    # comments = serializers.SerializerMethodField()
 
     class Meta:
         model = Post
-        fields = ['id', 'comments', 'user', 'content']
+        fields = ['id', 'user', 'content']
         read_only_fields = ['user', 'comments']
         depth = 1
 
-    def get_comments(self, post):
-        paginator = PageNumberPagination()
-        pagination = paginator.paginate_queryset(
-            Comment.objects.filter(post=post), self.context['request'])
-        return paginator.get_paginated_response(CommentSerializer(pagination, many=True, read_only=True).data).data
+    # def get_comments(self, post):
+    #     paginator = PageNumberPagination()
+    #     pagination = paginator.paginate_queryset(
+    #         Comment.objects.filter(post=post), self.context['request'])
+    #     return paginator.get_paginated_response(CommentSerializer(pagination, many=True, read_only=True).data or []).data

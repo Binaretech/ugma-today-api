@@ -1,5 +1,6 @@
 from django.test import TestCase
 from rest_framework import status
+from rest_framework.test import APIClient
 import random
 import string
 
@@ -45,16 +46,32 @@ class AuthViewTests(TestCase):
 
 
 class PostViewSetTests(TestCase):
+    def setUp(self):
+        self.client = APIClient()
+        response = self.client.post('/api/register/', data={
+            'username': 'test_user',
+            'password': 'test_password',
+            'profile': {
+                'name': randomString(),
+                'lastname': randomString(),
+                'email': randomString()+'@'+randomString()+'.com'
+            }
+        }, format='json')
+
+        self.client.credentials(
+            HTTP_AUTHORIZATION='Token ' + response.data['token'])
+
     def test_index(self):
         response = self.client.get('/api/post/')
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code,
+                         status.HTTP_200_OK)
 
     def test_store(self):
         data = {
             'title': randomString(),
             'content': randomString(),
         }
-        response = self.client.post('/api/post/', data, 'application/json')
+        response = self.client.post('/api/post/', data, format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
     def test_show_not_found(self):
@@ -70,7 +87,7 @@ class PostViewSetTests(TestCase):
             'title': randomString(),
             'content': randomString(),
         }
-        response = self.client.post('/api/post/', data, 'application/json')
+        response = self.client.post('/api/post/', data, format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
         response = self.client.get('/api/post/1/')
@@ -81,8 +98,25 @@ class PostViewSetTests(TestCase):
             'title': randomString(),
             'content': randomString(),
         }
-        response = self.client.post('/api/post/', data, 'application/json')
+        response = self.client.post('/api/post/', data, format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
         response = self.client.delete('/api/post/1/')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+
+class CommentViewSetTests(TestCase):
+    def setUp(self):
+        self.client = APIClient()
+        response = self.client.post('/api/register/', data={
+            'username': 'test_user',
+            'password': 'test_password',
+            'profile': {
+                'name': randomString(),
+                'lastname': randomString(),
+                'email': randomString()+'@'+randomString()+'.com'
+            }
+        }, format='json')
+
+        self.client.credentials(
+            HTTP_AUTHORIZATION='Token ' + response.data['token'])

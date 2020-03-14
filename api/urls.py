@@ -1,11 +1,12 @@
 from django.urls import path
 from rest_framework.urls import url
-from .views import UserViewSet, PostViewSet, Authentication, register, CommentViewSet
+from .views import Authentication, register, UserViewSet, PostViewSet, CommentViewSet
 
 urlpatterns = [
     url('login/', Authentication.as_view()),
     url('register/', register),
-    url('user/', UserViewSet.as_view()),
+    url('get_user/', UserViewSet.as_view({'get': 'show'})),
+    url('user/', UserViewSet.as_view({'get': 'index'})),
     path('post/<int:id>/',
          PostViewSet.as_view({'get': 'show', 'delete': 'destroy'})),
     url('post/', PostViewSet.as_view({'post': 'store', 'get': 'index'})),
