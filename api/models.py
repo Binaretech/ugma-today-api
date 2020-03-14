@@ -20,3 +20,9 @@ class Post(models.Model):
     user = models.ForeignKey(User, models.SET_NULL, null=True)
     title = models.CharField(max_length=128)
     content = models.TextField()
+
+
+class Comment(models.Model):
+    user = models.ForeignKey(User, models.CASCADE)
+    post = models.ForeignKey(Post, models.CASCADE)
+    content = models.CharField(max_length=500)
