@@ -12,8 +12,8 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-    - name: Setup PostgreSQL
     - uses: Harmon758/postgresql-action@v1.0.0
+    - name: Setup PostgreSQL
       with:
         postgresql version: 11 # optional, default is latest
         postgresql db: ugma_today # optional, default is 
