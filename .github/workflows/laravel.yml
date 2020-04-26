@@ -8,17 +8,19 @@ on:
 
 jobs:
   laravel-tests:
-
     runs-on: ubuntu-latest
     
+    services:
+      postgres:
+        image: postgresql:11
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_DB: ugma_today
+          POSTGRES_PASSWORD: secret
+        ports:
+          - 5432:5432
+            
     steps:
-    - uses: Harmon758/postgresql-action@v1.0.0
-    - name: Setup PostgreSQL
-      with:
-        postgresql version: 11 # optional, default is latest
-        postgresql db: ugma_today # optional, default is 
-        postgresql user: postgres # optional, default is 
-        postgresql password: secret 
     - uses: actions/checkout@v2
     - name: Copy .env
       run: php -r "file_exists('.env') || copy('.env.example', '.env');"
