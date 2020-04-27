@@ -3,7 +3,7 @@ FROM php:apache
 ENV APACHE_DOCUMENT_ROOT /app/public
 
 RUN apt-get update -y
-RUN apt-get install -y libpq-dev libxml2-dev curl
+RUN apt-get install -y libpq-dev libxml2-dev curl libonig-dev
 
 RUN docker-php-ext-install bcmath mbstring pdo_pgsql xml pgsql intl
 RUN pecl install xdebug
