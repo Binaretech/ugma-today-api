@@ -3,8 +3,7 @@ FROM php:apache
 ENV APACHE_DOCUMENT_ROOT /app/public
 
 RUN apt-get update -y
-
-RUN apt-get install -y libpq-dev curl libxml2-dev git nano openssl
+RUN apt-get install -y libpq-dev libxml2-dev curl
 
 RUN docker-php-ext-install bcmath mbstring pdo_pgsql xml pgsql intl
 RUN pecl install xdebug

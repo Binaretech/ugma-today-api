@@ -51,5 +51,5 @@ $factory->afterCreating(User::class, function (User $user, $faker) {
 });
 
 $factory->afterMaking(User::class, function (User $user, $faker) {
-    $user->profile()->save(factory(Profile::class)->make());
+    $user->setRelation('profile', factory(Profile::class)->make());
 });
