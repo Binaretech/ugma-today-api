@@ -2,6 +2,7 @@
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
+use App\Profile;
 use App\User;
 use Faker\Generator as Faker;
 use Illuminate\Support\Str;
@@ -43,3 +44,12 @@ $factory->state(User::class, 'active', [
 $factory->state(User::class, 'banned', [
     'status' => User::STATUS['BANNED'],
 ]);
+
+
+$factory->afterCreating(User::class, function (User $user, $faker) {
+    $user->profile()->save(factory(Profile::class)->make());
+});
+
+$factory->afterMaking(User::class, function (User $user, $faker) {
+    $user->profile()->save(factory(Profile::class)->make());
+});
