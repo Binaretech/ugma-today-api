@@ -12,6 +12,6 @@ class ProfileTest extends TestCase
         $profile = factory(User::class)->create()->profile;
 
         $this->assertNotNull($profile);
-        $this->assertDatabaseHas('profile', $profile);
+        $this->assertDatabaseHas('profiles', ['user_id' => $profile->user_id]);
     }
 }

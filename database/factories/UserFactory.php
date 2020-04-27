@@ -49,7 +49,3 @@ $factory->state(User::class, 'banned', [
 $factory->afterCreating(User::class, function (User $user, $faker) {
     $user->profile()->save(factory(Profile::class)->make());
 });
-
-$factory->afterMaking(User::class, function (User $user, $faker) {
-    $user->setRelation('profile', factory(Profile::class)->make());
-});

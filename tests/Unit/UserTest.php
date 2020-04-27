@@ -14,8 +14,7 @@ class UserTest extends TestCase
     public function test_profile_relation()
     {
         $user = factory(User::class)->create();
-
         $this->assertNotNull($user->profile);
-        $this->assertDatabaseHas('user', $user);
+        $this->assertDatabaseHas('users', ['id' => $user->id]);
     }
 }
