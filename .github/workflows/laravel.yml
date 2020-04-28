@@ -15,7 +15,7 @@ jobs:
         image: postgres:11
         env:
           POSTGRES_USER: postgres
-          POSTGRES_DB: ugma_today
+          POSTGRES_DB: postgres
           POSTGRES_PASSWORD: secret
         ports:
           - 5432:5432
@@ -33,4 +33,4 @@ jobs:
     - name: Run migrations and seed
       run: php artisan migrate --seed
     - name: Execute tests (Unit and Feature tests) via PHPUnit
-      run: vendor/bin/phpunit
+      run: php artisan test

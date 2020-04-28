@@ -21,16 +21,6 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: secret
       POSTGRES_DB: ugma_today
-                
-  pgadmin:
-    image: dpage/pgadmin4
-    ports:
-      - 4000:80
-    depends_on:
-      - postgres
-    environment:
-      PGADMIN_DEFAULT_EMAIL: ugma_today
-      PGADMIN_DEFAULT_PASSWORD: secret
 
 volumes:
   postgres-ugma-today-volume: {}
