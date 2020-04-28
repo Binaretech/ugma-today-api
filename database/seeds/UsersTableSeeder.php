@@ -1,6 +1,5 @@
 <?php
 
-use App\Profile;
 use Illuminate\Database\Seeder;
 use App\User;
 
@@ -13,11 +12,19 @@ class UsersTableSeeder extends Seeder
      */
     public function run()
     {
-        factory(User::class, 4)->states(
+        factory(User::class)->states([
             'admin',
+            'active',
+        ])->create();
+
+        factory(User::class, 20)->states([
             'user',
             'active',
+        ])->create();
+
+        factory(User::class, 20)->states([
+            'user',
             'banned'
-        )->create();
+        ])->create();
     }
 }
