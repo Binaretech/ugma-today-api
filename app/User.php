@@ -5,10 +5,15 @@ namespace App;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Laravel\Passport\HasApiTokens;
 
 class User extends Authenticatable
 {
-    use Notifiable;
+    use Notifiable, HasApiTokens;
+
+    protected $fillable = [
+        'username', 'password', 'type'
+    ];
 
     protected $hidden = [
         'password',
@@ -28,6 +33,18 @@ class User extends Authenticatable
         'BANNED' => 1,
     ];
 
+    public const REGISTER_RULES = [
+        'username' => 'required|unique:users|min:3|max:40',
+        'password' => 'required|min:6|max:45',
+        'name' => 'required|min:2|max:50',
+        'lastname' => 'required|min:2|max:50',
+        'email' => 'required|email:rfc,dns'
+    ];
+
+    public const LOGIN_RULES = [
+        'username' => 'required|exists:users',
+        'password' => 'required|min:6|max:45',
+    ];
 
     public function setPasswordAttribute($value)
     {
