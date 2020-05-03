@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Carbon\Carbon;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -38,7 +39,7 @@ class User extends Authenticatable
         'password' => 'required|min:6|max:45',
         'name' => 'required|min:2|max:50',
         'lastname' => 'required|min:2|max:50',
-        'email' => 'required|email:rfc,dns'
+        'email' => 'required|unique:profiles|email:rfc,dns'
     ];
 
     public const LOGIN_RULES = [
@@ -46,9 +47,35 @@ class User extends Authenticatable
         'password' => 'required|min:6|max:45',
     ];
 
+    public const PASSWORD_RESET_RULES = [
+        'email' => 'required|exists:profiles',
+    ];
+
+    public static function reset_rules()
+    {
+        return [
+            'token' => ['required', 'exists:password_resets', function ($attribute, $value, $fail) {
+                if (optional(PasswordReset::where('token', $value)->first())->expire_at < Carbon::now()) {
+                    $fail(trans('validation.expired', ['attribute' => $attribute]));
+                }
+            }],
+            'password' => ['required', 'min:6', 'max:45']
+        ];
+    }
+
+    public function scopeActive($query)
+    {
+        return $query->where('status', User::STATUS['ACTIVE']);
+    }
+
     public function setPasswordAttribute($value)
     {
         $this->attributes['password'] = bcrypt($value);
+    }
+
+    public function password_reset()
+    {
+        return $this->hasOne(PasswordReset::class);
     }
 
     public function profile()
