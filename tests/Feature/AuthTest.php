@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\PasswordReset;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
@@ -23,11 +24,6 @@ class AuthTest extends TestCase
         $response->assertCreated();
     }
 
-    /**
-     * A basic feature test example.
-     *
-     * @return void
-     */
     public function test_login()
     {
         $register = [
@@ -40,11 +36,34 @@ class AuthTest extends TestCase
 
         $this->post('api/register', $register);
 
-        $response = $this->post('api/login', [
+        $this->post('api/login', [
             'username' => $register['username'],
             'password' => $register['password'],
-        ]);
+        ])->assertOk();
+    }
 
-        $response->assertOk();
+    public function test_password_reset_email()
+    {
+        $register = [
+            'username' => $this->faker->userName,
+            'password' => $this->faker->password,
+            'name' => $this->faker->name,
+            'lastname' => $this->faker->lastName,
+            'email' => 'alanbrito@gmail.com',
+        ];
+
+        $this->post('api/register', $register)->assertCreated();
+
+        $this->json('POST', 'api/passwordReset', ['email' => $register['email']])->assertOk();
+    }
+
+    public function test_reset_password()
+    {
+        $password_reset = factory(PasswordReset::class)->create();
+
+        $this->post('api/resetPassword', [
+            'token' => $password_reset->token,
+            'password' => $this->faker->password
+        ])->assertOk();
     }
 }
