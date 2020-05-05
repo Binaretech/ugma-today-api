@@ -19,6 +19,11 @@ jobs:
           POSTGRES_PASSWORD: secret
         ports:
           - 5432:5432
+
+      mailhog:
+        image: mailhog
+        ports:
+          - 1025:1025
             
     steps:
     - uses: actions/checkout@v2
