@@ -17,7 +17,7 @@ class CreateCostsTable extends Migration
             $table->id();
             $table->string('name', 45);
             $table->string('price', 45);
-            $table->string('message', 128);
+            $table->string('message', 128)->nullable();
             $table->string('modified_by', 128);
 
             $table->timestamps();

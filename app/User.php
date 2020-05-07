@@ -117,4 +117,29 @@ class User extends Authenticatable
     {
         return $this->hasMany(Feedback::class);
     }
+
+    public function setPasswordAttribute($value)
+    {
+        $this->attributes['password'] = bcrypt($value);
+    }
+
+    public function scopeUser($query)
+    {
+        return $query->where('type', User::TYPES['USER']);
+    }
+
+    public function scopeAdmin($query)
+    {
+        return $query->where('type', User::TYPES['ADMIN']);
+    }
+
+    public function scopeActive($query)
+    {
+        return $query->where('status', User::STATUS['ACTIVE']);
+    }
+
+    public function scopeBanned($query)
+    {
+        return $query->where('status', User::STATUS['BANNED']);
+    }
 }
