@@ -15,7 +15,7 @@ class UsersTableSeeder extends Seeder
         factory(User::class)->states([
             'admin',
             'active',
-        ])->create();
+        ])->create(['username' =>  'mari_conazo']);
 
         factory(User::class, 20)->states([
             'user',
@@ -25,6 +25,24 @@ class UsersTableSeeder extends Seeder
         factory(User::class, 20)->states([
             'user',
             'banned'
+        ])->create();
+
+        factory(User::class)->states([
+            'admin',
+            'active',
+            'deleted',
+        ])->create();
+
+        factory(User::class, 5)->states([
+            'user',
+            'active',
+            'deleted',
+        ])->create();
+
+        factory(User::class, 5)->states([
+            'user',
+            'banned',
+            'deleted',
         ])->create();
     }
 }
