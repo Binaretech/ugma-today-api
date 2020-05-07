@@ -79,16 +79,6 @@ class User extends Authenticatable
         ];
     }
 
-    public function scopeActive($query)
-    {
-        return $query->where('status', User::STATUS['ACTIVE']);
-    }
-
-    public function setPasswordAttribute($value)
-    {
-        $this->attributes['password'] = bcrypt($value);
-    }
-
     public function password_reset()
     {
         return $this->hasOne(PasswordReset::class);
