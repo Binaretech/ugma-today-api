@@ -4,13 +4,14 @@ namespace App;
 
 use Carbon\Carbon;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Passport\HasApiTokens;
 
 class User extends Authenticatable
 {
-    use Notifiable, HasApiTokens;
+    use Notifiable, HasApiTokens, SoftDeletes;
 
     protected $fillable = [
         'username', 'password', 'type'
@@ -49,6 +50,21 @@ class User extends Authenticatable
 
     public const PASSWORD_RESET_RULES = [
         'email' => 'required|exists:profiles',
+    ];
+
+    public const FILTER_RULES = [
+        'type' => 'sometimes|required|numeric|between:0,1',
+        'status' => 'sometimes|required|numeric|between0,1',
+        'with_deleted' => 'sometimes|required|boolean',
+        'deleted_only' => 'sometimes|required|boolean',
+    ];
+
+    public const UPDATE_RULES = [
+        'username' => 'sometimes|unique:users|min:3|max:40',
+        'password' => 'sometimes|min:6|max:45',
+        'name' => 'sometimes|min:2|max:50',
+        'lastname' => 'sometimes|min:2|max:50',
+        'email' => 'sometimes|unique:profiles|email:rfc,dns'
     ];
 
     public static function reset_rules()

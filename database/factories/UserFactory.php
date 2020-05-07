@@ -45,6 +45,12 @@ $factory->state(User::class, 'banned', [
     'status' => User::STATUS['BANNED'],
 ]);
 
+$factory->state(User::class, 'deleted', function (Faker $faker) {
+    return [
+        'deleted_at' => $faker->dateTime
+    ];
+});
+
 
 $factory->afterCreating(User::class, function (User $user, $faker) {
     $user->profile()->save(factory(Profile::class)->make());
