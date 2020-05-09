@@ -29,10 +29,10 @@ class User extends Authenticatable
     ];
 
     public const STATUS = [
-        0 => 'ACTIVE',
-        1 => 'BANNED',
-        'ACTIVE' => 0,
-        'BANNED' => 1,
+        0 => 'BANNED',
+        1 => 'ACTIVE',
+        'ACTIVE' => 1,
+        'BANNED' => 0,
     ];
 
     public const REGISTER_RULES = [
@@ -54,7 +54,7 @@ class User extends Authenticatable
 
     public const FILTER_RULES = [
         'type' => 'sometimes|required|numeric|between:0,1',
-        'status' => 'sometimes|required|numeric|between0,1',
+        'status' => 'sometimes|required|numeric|between:0,1',
         'with_deleted' => 'sometimes|required|boolean',
         'deleted_only' => 'sometimes|required|boolean',
     ];
@@ -77,16 +77,6 @@ class User extends Authenticatable
             }],
             'password' => ['required', 'min:6', 'max:45']
         ];
-    }
-
-    public function scopeActive($query)
-    {
-        return $query->where('status', User::STATUS['ACTIVE']);
-    }
-
-    public function setPasswordAttribute($value)
-    {
-        $this->attributes['password'] = bcrypt($value);
     }
 
     public function password_reset()
@@ -132,5 +122,30 @@ class User extends Authenticatable
     public function feedback()
     {
         return $this->hasMany(Feedback::class);
+    }
+
+    public function setPasswordAttribute($value)
+    {
+        $this->attributes['password'] = bcrypt($value);
+    }
+
+    public function scopeUser($query)
+    {
+        return $query->where('type', User::TYPES['USER']);
+    }
+
+    public function scopeAdmin($query)
+    {
+        return $query->where('type', User::TYPES['ADMIN']);
+    }
+
+    public function scopeActive($query)
+    {
+        return $query->where('status', User::STATUS['ACTIVE']);
+    }
+
+    public function scopeBanned($query)
+    {
+        return $query->where('status', User::STATUS['BANNED']);
     }
 }

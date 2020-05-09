@@ -73,6 +73,16 @@ class Handler extends ExceptionHandler
                 404
             );
         }
-        return parent::render($request, $exception);
+
+        $response = ['errorMessage' => trans('exeptions.internal_error')];
+
+        if (config('app.env') === 'local') {
+            $response = array_merge($response, [
+                'error' => $exception->getMessage(),
+                'trace' => $exception->getTrace(),
+            ]);
+        }
+
+        return response()->json($response,  500);
     }
 }

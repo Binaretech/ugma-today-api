@@ -67,6 +67,6 @@ class UserControllerTest extends TestCase
 
         Passport::actingAs($user, [User::TYPES[$user->type]]);
 
-        $this->delete('api/user')->dump();
+        $this->delete('api/user')->assertOk();
     }
 }
