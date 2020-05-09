@@ -19,7 +19,6 @@ trait CreatesApplication
 
         $app->make(Kernel::class)->bootstrap();
 
-        Artisan::call('key:generate');
         Artisan::call('migrate:fresh');
 
         return $app;

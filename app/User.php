@@ -29,10 +29,10 @@ class User extends Authenticatable
     ];
 
     public const STATUS = [
-        0 => 'ACTIVE',
-        1 => 'BANNED',
-        'ACTIVE' => 0,
-        'BANNED' => 1,
+        0 => 'BANNED',
+        1 => 'ACTIVE',
+        'ACTIVE' => 1,
+        'BANNED' => 0,
     ];
 
     public const REGISTER_RULES = [
@@ -54,7 +54,7 @@ class User extends Authenticatable
 
     public const FILTER_RULES = [
         'type' => 'sometimes|required|numeric|between:0,1',
-        'status' => 'sometimes|required|numeric|between0,1',
+        'status' => 'sometimes|required|numeric|between:0,1',
         'with_deleted' => 'sometimes|required|boolean',
         'deleted_only' => 'sometimes|required|boolean',
     ];

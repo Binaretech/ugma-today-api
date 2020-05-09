@@ -24,24 +24,23 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
-        $filters = $request->validate(User::FILTER_RULES);
-        $query = new User();
+        $request->validate(User::FILTER_RULES);
 
-        if (isset($filters['with_deleted']) || isset($filters['deleted_only'])) {
-            $query->withTrashed();
-        }
-
-        if (isset($filters['deleted_only'])) {
-            $query->whereNotNull('deleted_at');
-        }
-
-        if (isset($filters['type'])) {
-            $query->where('type', $filters['type']);
-        }
-
-        if (isset($filters['status'])) {
-            $query->where('status', $filters['status']);
-        }
+        $query = User::when(
+            $request->has(['with_deleted', 'deleted_only']),
+            function ($query) {
+                return $query->withTrashed();
+            }
+        )
+            ->when($request->has('deleted_only'), function ($query) {
+                return $query->whereNotNull('deleted_at');
+            })
+            ->when($request->has('status'), function ($query) use ($request) {
+                return $query->where('status', $request->input('status'));
+            })
+            ->when($request->has('type'), function ($query) use ($request) {
+                return $query->where('type', $request->input('type'));
+            });
 
         return UserResource::collection($query->paginate($request->pagination ?? 10));
     }
