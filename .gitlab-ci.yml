@@ -1,32 +1,39 @@
-stages:
-  - test
+image: php:7.4
 
 services:
   - postgres:latest
-
-cache:
-  paths:
-    - vendor/
 
 variables:
   POSTGRES_USER: postgres
   POSTGRES_PASSWORD: secret
   POSTGRES_DB: ugma_today
-  
+
 before_script:
-  - apt-get update -yqq
-  - apt-get install gnupg -yqq
-  - apt-get install libpq-dev libxml2-dev curl libonig-dev libzip-dev  -yqq
-  - docker-php-ext-install bcmath pdo_pgsql xml pgsql intl zip opcache
-  - pecl install xdebug
-  - docker-php-ext-enable xdebug
-  - curl -sS https://getcomposer.org/installer | php
-  - php composer.phar install -q --no-ansi --no-interaction --no-scripts --no-suggest --no-progress --prefer-dist
-  - cp .env.testing .env
-  - php artisan key:generate
-  
-test:
-  stage: test
-  image: php:7.4
+- >
+  set -xe
+  && apt-get update -yqq
+  && apt-get install -yqq
+  git
+  libicu-dev
+  libpq-dev
+  libzip-dev
+  zlib1g-dev
+- >
+  docker-php-ext-install
+  pdo_pgsql
+  pgsql
+  sockets
+  intl
+  zip
+- curl -sS https://getcomposer.org/installer | php
+- php composer.phar self-update
+- php composer.phar install --no-progress --no-interaction
+- cp .env.gitlab-ci .env
+- php artisan key:generate
+- php artisan help config:clear
+- php artisan route:clear
+- php artisan migrate:fresh
+
+test:app:
   script:
-    - php vendor/bin/phpunit --coverage-text --colors=never --testsuite Unit
+  - vendor/bin/phpunit --configuration phpunit.xml
