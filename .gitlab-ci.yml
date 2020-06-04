@@ -24,14 +24,9 @@ before_script:
   - php composer.phar install -q --no-ansi --no-interaction --no-scripts --no-suggest --no-progress --prefer-dist
   - cp .env.testing .env
   - php artisan key:generate
-  - chmod -R 777 storage bootstrap/cache
-  - php artisan config:cache
-  - php artisan migrate
-  - php artisan db:seed  
-  - php artisan passport:install  
   
 test:
   stage: test
   image: php:7.4
   script:
-    - php artisan test
+    - php vendor/bin/phpunit --coverage-text --colors=never
