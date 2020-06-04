@@ -33,7 +33,7 @@ test:
 image: php:latest
 
 services:
-  - postgresql:latest
+  - postgres:latest
 
 variables:
   POSTGRES_USER: postgres
