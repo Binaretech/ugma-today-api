@@ -28,7 +28,7 @@ before_script:
 - curl -sS https://getcomposer.org/installer | php
 - php composer.phar self-update
 - php composer.phar install --no-progress --no-interaction
-- cp .env.gitlab-ci .env
+- cp .env.testing .env
 - php artisan key:generate
 - php artisan help config:clear
 - php artisan route:clear
