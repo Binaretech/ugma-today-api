@@ -1,8 +1,11 @@
 image: php:latest
 
+include:
+  - template: Dependency-Scanning.gitlab-ci.yml
+
 services:
   - postgresql:latest
-
+    
 variables:
   POSTGRES_USER: postgres
   POSTGRES_PASSWORD: secret
