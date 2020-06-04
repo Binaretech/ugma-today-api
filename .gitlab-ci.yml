@@ -21,9 +21,10 @@ before_script:
   - pecl install xdebug
   - docker-php-ext-enable xdebug
   - curl -sS https://getcomposer.org/installer | php
-  - php composer.phar install
+  - php composer.phar install -q --no-ansi --no-interaction --no-scripts --no-suggest --no-progress --prefer-dist
   - cp .env.testing .env
   - php artisan key:generate
+  - chmod -R 777 storage bootstrap/cache
   - php artisan config:cache
   - php artisan migrate
   - php artisan db:seed  
@@ -33,4 +34,4 @@ test:
   stage: test
   image: php:7.4
   script:
-    - php vendor/bin/phpunit --coverage-text --colors=never
+    - php artisan test
