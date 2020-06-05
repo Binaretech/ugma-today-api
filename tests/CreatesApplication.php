@@ -4,8 +4,6 @@ namespace Tests;
 use Illuminate\Contracts\Console\Kernel;
 use Illuminate\Support\Facades\Artisan;
 
-ini_set(“memory_limit”,”16M“);
-
 trait CreatesApplication
 {
     /**
