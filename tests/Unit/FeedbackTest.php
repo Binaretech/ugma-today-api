@@ -18,6 +18,5 @@ class FeedbackTest extends TestCase
         ]);
 
         $this->assertNotNull($report->user);
-        $this->assertDatabaseHas('users', ['id' => $report->user->id]);
     }
 }

@@ -1,0 +1,33 @@
+image: php:latest
+
+services:
+  - postgres:latest
+  - mailhog/mailhog:latest
+
+cache:
+  paths:
+    - vendor/
+
+variables:
+  POSTGRES_USER: postgres
+  POSTGRES_PASSWORD: secret
+  POSTGRES_DB: ugma_today
+
+before_script:
+  - apt-get update -yqq
+  - apt-get install gnupg -yqq
+  - apt-get install libpq-dev libxml2-dev curl libonig-dev libzip-dev  -yqq
+  - docker-php-ext-install bcmath pdo_pgsql xml pgsql intl zip opcache
+  - pecl install xdebug
+  - docker-php-ext-enable xdebug
+  - curl -sS https://getcomposer.org/installer | php
+  - php composer.phar install -q --no-ansi --no-interaction --no-scripts --no-suggest --no-progress --prefer-dist
+  - cp .env.testing .env
+  - php artisan key:generate
+  - php artisan route:clear
+  - php artisan config:clear
+  - php artisan migrate:fresh
+
+test:app:
+  script:
+  - vendor/bin/phpunit --configuration phpunit.xml --coverage-text --colors=never -d memory_limit=-1

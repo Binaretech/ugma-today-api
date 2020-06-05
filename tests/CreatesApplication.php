@@ -1,5 +1,4 @@
 <?php
-
 namespace Tests;
 
 use Illuminate\Contracts\Console\Kernel;
@@ -18,8 +17,6 @@ trait CreatesApplication
 
 
         $app->make(Kernel::class)->bootstrap();
-
-        Artisan::call('migrate:fresh');
 
         return $app;
     }

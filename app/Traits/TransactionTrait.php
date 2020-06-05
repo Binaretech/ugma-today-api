@@ -17,7 +17,7 @@ trait TransactionTrait
                 $function();
             } catch (\Exception $e) {
                 throw new DatabaseException($error_message ?
-                    $error_message : trans('exceptions.internal'), $error_status, $e);
+                    $error_message : trans('exception.internal_error'), $error_status, $e);
             }
         });
     }
