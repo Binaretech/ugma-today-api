@@ -1,0 +1,20 @@
+image: registry.gitlab.com/ugma-today/ugma-today-api:latest
+
+services:
+  - postgres:latest
+
+variables:
+  POSTGRES_USER: postgres
+  POSTGRES_PASSWORD: secret
+  POSTGRES_DB: ugma_today
+
+before_script:
+- cp .env.gitlab-ci .env
+- php artisan key:generate
+- php artisan help config:clear
+- php artisan route:clear
+- php artisan migrate:fresh
+
+test:app:
+  script:
+  - vendor/bin/phpunit --configuration phpunit.xml
