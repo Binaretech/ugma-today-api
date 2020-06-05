@@ -16,7 +16,8 @@ variables:
 before_script:
   - apt-get update -yqq
   - apt-get install gnupg -yqq
-  - apt-get install libpq-dev libxml2-dev curl libonig-dev libzip-dev  -yqq
+  - apt-get install libpq-dev libxml2-dev curl libonig-dev libzip-dev ruby-dev -yqq
+  - gem install dpl
   - docker-php-ext-install bcmath pdo_pgsql xml pgsql intl zip opcache
   - pecl install xdebug
   - docker-php-ext-enable xdebug
@@ -28,6 +29,15 @@ before_script:
   - php artisan config:clear
   - php artisan migrate:fresh
 
-test:app:
+test:
+  type: test
   script:
   - vendor/bin/phpunit --configuration phpunit.xml --coverage-text --colors=never -d memory_limit=-1
+
+staging:
+    type: deploy
+    image: ruby:latest
+    script:
+        - dpl --provider=heroku --app=$STAGING --api-key=$HEROKU_API_KEY
+    only:
+        - master
