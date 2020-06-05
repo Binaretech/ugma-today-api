@@ -4,6 +4,10 @@ services:
   - postgres:latest
   - mailhog/mailhog:latest
 
+cache:
+  paths:
+    - vendor/
+
 variables:
   POSTGRES_USER: postgres
   POSTGRES_PASSWORD: secret
