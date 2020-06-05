@@ -9,12 +9,12 @@ variables:
   POSTGRES_DB: ugma_today
 
 before_script:
-- cp .env.gitlab-ci .env
+- cp .env.testing .env
 - php artisan key:generate
-- php artisan help config:clear
 - php artisan route:clear
+- php artisan config:clear
 - php artisan migrate:fresh
 
 test:app:
   script:
-  - vendor/bin/phpunit --configuration phpunit.xml
+  - vendor/bin/phpunit --configuration phpunit.xml --coverage-text --colors=never

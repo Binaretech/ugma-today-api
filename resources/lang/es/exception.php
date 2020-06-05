@@ -1,7 +1,5 @@
 <?php
 
-use App\User;
-
 return [
     'internal_error' => 'Ha ocurrido un error.',
     'unauthenticated' => 'No autenticado.',

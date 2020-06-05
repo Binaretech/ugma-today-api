@@ -1,0 +1,121 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Ugma Today API Documentation",
+        "description": "",
+        "license": {
+            "name": "GNU GPL v3.0",
+            "url": "https://www.gnu.org/licenses/gpl-3.0.en.html"
+        },
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://localhost",
+            "description": "API Server"
+        }
+    ],
+    "paths": {
+        "/register": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Create user",
+                "description": "Register new user in the app.",
+                "operationId": "createUser",
+                "requestBody": {
+                    "description": "user create",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "username": {
+                                        "type": "string"
+                                    },
+                                    "password": {
+                                        "type": "string"
+                                    },
+                                    "name": {
+                                        "type": "string"
+                                    },
+                                    "lastname": {
+                                        "type": "string"
+                                    },
+                                    "email": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    }
+                }
+            }
+        },
+        "/user": {
+            "get": {
+                "tags": [
+                    "User"
+                ],
+                "summary": "Get list of users",
+                "description": "Returns list of users",
+                "operationId": "getProjectsList",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "Profile": {
+                "title": "Profile model",
+                "description": "Profile model",
+                "properties": {
+                    "name": {
+                        "title": "name",
+                        "description": "User's first name",
+                        "type": "string"
+                    },
+                    "lastname": {
+                        "title": "lastname",
+                        "description": "User's last name",
+                        "type": "string"
+                    },
+                    "email": {
+                        "title": "email",
+                        "description": "User's registered email",
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "User": {
+                "title": "User model",
+                "description": "User model",
+                "properties": {
+                    "username": {
+                        "title": "Username",
+                        "description": "Username",
+                        "type": "string"
+                    },
+                    "type": {
+                        "title": "Type",
+                        "description": "Type",
+                        "type": "string",
+                        "format": "int8"
+                    }
+                },
+                "type": "object"
+            }
+        }
+    }
+}

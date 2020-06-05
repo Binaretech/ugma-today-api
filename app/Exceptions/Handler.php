@@ -5,6 +5,7 @@ namespace App\Exceptions;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Validation\ValidationException;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -15,7 +16,7 @@ class Handler extends ExceptionHandler
      * @var array
      */
     protected $dontReport = [
-        //
+        ValidationException::class
     ];
 
     /**
@@ -64,25 +65,28 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Throwable $exception)
     {
-        if ($exception instanceof ModelNotFoundException) {
-            return  response()->json(
-                ['message' => trans(
-                    'exception.not_found',
-                    ['resource' => trans('exception.resource.' . $exception->getModel())]
-                )],
-                404
-            );
-        }
+        return parent::render($request, $exception);
 
-        $response = ['errorMessage' => trans('exeptions.internal_error')];
+        // dd($exception);
+        // if ($exception instanceof ModelNotFoundException) {
+        //     return  response()->json(
+        //         ['message' => trans(
+        //             'exception.not_found',
+        //             ['resource' => trans('exception.resource.' . $exception->getModel())]
+        //         )],
+        //         404
+        //     );
+        // }
 
-        if (config('app.env') === 'local') {
-            $response = array_merge($response, [
-                'error' => $exception->getMessage(),
-                'trace' => $exception->getTrace(),
-            ]);
-        }
+        // $response = ['errorMessage' => trans('exception.internal_error')];
 
-        return response()->json($response,  500);
+        // if (config('app.env') === 'local') {
+        //     $response = array_merge($response, [
+        //         'error' => $exception->getMessage(),
+        //         'trace' => $exception->getTrace(),
+        //     ]);
+        // }
+
+        // return response()->json($response,  500);
     }
 }
