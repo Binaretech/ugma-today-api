@@ -17,19 +17,6 @@ class UserController extends Controller
         $this->middleware('scope:ADMIN')->only(['index', 'ban', 'active']);
     }
 
-    /**
-     * @OA\Get(
-     *      path="/user",
-     *      operationId="getProjectsList",
-     *      tags={"User"},
-     *      summary="Get list of users",
-     *      description="Returns list of users",
-     *      @OA\Response(
-     *          response=200,
-     *          description="Successful operation",
-     *       ),
-     * )
-     */
     public function index(Request $request)
     {
         $request->validate(User::FILTER_RULES);

@@ -12,7 +12,9 @@ use Laravel\Passport\HasApiTokens;
 /**
  * @OA\Schema(
  *     title="User model",
- *     description="User model",
+ *     description="User model", 
+ *     @OA\Property(property="username", type="string"),
+ *     @OA\Property(property="type", type="int"),
  * )
  */
 class User extends Authenticatable

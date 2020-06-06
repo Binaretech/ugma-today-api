@@ -11,7 +11,7 @@
     },
     "servers": [
         {
-            "url": "http://localhost",
+            "url": "http://localhost/api",
             "description": "API Server"
         }
     ],
@@ -21,28 +21,32 @@
                 "tags": [
                     "Auth"
                 ],
-                "summary": "Create user",
-                "description": "Register new user in the app.",
-                "operationId": "createUser",
+                "summary": "Register new user",
+                "description": "Create a user and return their data",
+                "operationId": "register",
                 "requestBody": {
-                    "description": "user create",
                     "content": {
                         "application/json": {
                             "schema": {
                                 "properties": {
                                     "username": {
+                                        "description": "Username in the platform",
                                         "type": "string"
                                     },
                                     "password": {
+                                        "description": "Password for login",
                                         "type": "string"
                                     },
                                     "name": {
+                                        "description": "User's first name",
                                         "type": "string"
                                     },
                                     "lastname": {
+                                        "description": "User's last name",
                                         "type": "string"
                                     },
                                     "email": {
+                                        "description": "User's email",
                                         "type": "string"
                                     }
                                 },
@@ -53,22 +57,156 @@
                 },
                 "responses": {
                     "200": {
-                        "description": "successful operation"
+                        "description": "successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "description": "Register new user",
+                                            "properties": {
+                                                "id": {
+                                                    "description": "Register new user",
+                                                    "type": "int"
+                                                },
+                                                "username": {
+                                                    "description": "Register new user",
+                                                    "type": "string"
+                                                },
+                                                "type": {
+                                                    "description": "Register new user",
+                                                    "type": "int"
+                                                },
+                                                "profile": {
+                                                    "description": "Register new user",
+                                                    "properties": {
+                                                        "name": {
+                                                            "description": "Register new user",
+                                                            "type": "string"
+                                                        },
+                                                        "lastname": {
+                                                            "description": "Register new user",
+                                                            "type": "string"
+                                                        },
+                                                        "email": {
+                                                            "description": "Register new user",
+                                                            "type": "string"
+                                                        },
+                                                        "created_at": {
+                                                            "description": "Register new user",
+                                                            "type": "string"
+                                                        },
+                                                        "updated_at": {
+                                                            "description": "Register new user",
+                                                            "type": "string"
+                                                        }
+                                                    },
+                                                    "type": "object"
+                                                },
+                                                "token": {
+                                                    "description": "Register new user",
+                                                    "type": "string"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     }
                 }
             }
         },
-        "/user": {
-            "get": {
+        "/login": {
+            "post": {
                 "tags": [
-                    "User"
+                    "Auth"
                 ],
-                "summary": "Get list of users",
-                "description": "Returns list of users",
-                "operationId": "getProjectsList",
+                "summary": "Authenticate user",
+                "description": "Authenticate user and return their data",
+                "operationId": "login",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "username": {
+                                        "description": "Authenticate user",
+                                        "type": "string"
+                                    },
+                                    "password": {
+                                        "description": "Authenticate user",
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
                 "responses": {
                     "200": {
-                        "description": "Successful operation"
+                        "description": "successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "description": "Authenticate user",
+                                            "properties": {
+                                                "id": {
+                                                    "description": "Authenticate user",
+                                                    "type": "int"
+                                                },
+                                                "username": {
+                                                    "description": "Authenticate user",
+                                                    "type": "string"
+                                                },
+                                                "type": {
+                                                    "description": "Authenticate user",
+                                                    "type": "int"
+                                                },
+                                                "profile": {
+                                                    "description": "Authenticate user",
+                                                    "properties": {
+                                                        "name": {
+                                                            "description": "Authenticate user",
+                                                            "type": "string"
+                                                        },
+                                                        "lastname": {
+                                                            "description": "Authenticate user",
+                                                            "type": "string"
+                                                        },
+                                                        "email": {
+                                                            "description": "Authenticate user",
+                                                            "type": "string"
+                                                        },
+                                                        "created_at": {
+                                                            "description": "Authenticate user",
+                                                            "type": "string"
+                                                        },
+                                                        "updated_at": {
+                                                            "description": "Authenticate user",
+                                                            "type": "string"
+                                                        }
+                                                    },
+                                                    "type": "object"
+                                                },
+                                                "token": {
+                                                    "description": "Authenticate user",
+                                                    "type": "string"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -81,18 +219,12 @@
                 "description": "Profile model",
                 "properties": {
                     "name": {
-                        "title": "name",
-                        "description": "User's first name",
                         "type": "string"
                     },
                     "lastname": {
-                        "title": "lastname",
-                        "description": "User's last name",
                         "type": "string"
                     },
                     "email": {
-                        "title": "email",
-                        "description": "User's registered email",
                         "type": "string"
                     }
                 },
@@ -103,15 +235,10 @@
                 "description": "User model",
                 "properties": {
                     "username": {
-                        "title": "Username",
-                        "description": "Username",
                         "type": "string"
                     },
                     "type": {
-                        "title": "Type",
-                        "description": "Type",
-                        "type": "string",
-                        "format": "int8"
+                        "type": "int"
                     }
                 },
                 "type": "object"

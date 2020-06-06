@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\AuthResource;
+use App\Http\Resources\UserResource;
 use App\Mail\PasswordResetMail;
 use App\PasswordReset;
 use App\Profile;
@@ -17,11 +18,54 @@ class AuthController extends Controller
 {
     use TransactionTrait;
 
+    /**
+     * Register new user
+     * @param Request $request
+     * @return UserResource
+     * 
+     * @throws Exception on creation failure
+     * 
+     * @OA\Post(
+     *      path="/register",
+     *      operationId="register",
+     *      tags={"Auth"},
+     *      summary="Register new user",
+     *      description="Create a user and return their data",
+     *      @OA\RequestBody(
+     *          @OA\JsonContent(
+     *              @OA\Property(property="username", type="string", description="Username in the platform"),
+     *              @OA\Property(property="password", type="string", description="Password for login"),
+     *              @OA\Property(property="name", type="string", description="User's first name"),
+     *              @OA\Property(property="lastname", type="string", description="User's last name"),
+     *              @OA\Property(property="email", type="string", description="User's email"),
+     *          )
+     *      ),
+     *      @OA\Response(
+     *          response=200,
+     *          description="successful operation",
+     *          @OA\JsonContent(
+     *              @OA\Property(property="data", 
+     *                      @OA\Property(property="id", type="int"),
+     *                      @OA\Property(property="username", type="string"),
+     *                      @OA\Property(property="type", type="int"),
+     *                      @OA\Property(property="profile",
+     *                          @OA\Property(property="name", type="string"),
+     *                          @OA\Property(property="lastname", type="string"),
+     *                          @OA\Property(property="email", type="string"),
+     *                          @OA\Property(property="created_at", type="string"),
+     *                          @OA\Property(property="updated_at", type="string"),
+     *                      ),
+     *                      @OA\Property(property="token", type="string"),
+     *              ),
+     *          )
+     *       ),
+     *     )
+     */
     public function register(Request $request)
     {
         $request_data = $request->validate(User::REGISTER_RULES);
 
-        $user = null;
+        $user = new User();
 
         self::transaction(function () use ($request_data, &$user) {
             $user = User::create(array_merge($request_data, ['type' => User::TYPES['USER']]));
@@ -31,6 +75,47 @@ class AuthController extends Controller
         return new AuthResource($user);
     }
 
+    /**
+     * Authenticate user
+     * @param Request $request
+     * @return UserResource
+     * 
+     * @throws Exception on failure while authenticating user
+     * 
+     * @OA\Post(
+     *      path="/login",
+     *      operationId="login",
+     *      tags={"Auth"},
+     *      summary="Authenticate user",
+     *      description="Authenticate user and return their data",
+     *      @OA\RequestBody(
+     *          required=true,
+     *          @OA\JsonContent(
+     *              @OA\Property(property="username", type="string"),
+     *              @OA\Property(property="password", type="string"),
+     *          )
+     *      ),
+     *      @OA\Response(
+     *          response=200,
+     *          description="successful operation",
+     *          @OA\JsonContent(
+     *              @OA\Property(property="data", 
+     *                      @OA\Property(property="id", type="int"),
+     *                      @OA\Property(property="username", type="string"),
+     *                      @OA\Property(property="type", type="int"),
+     *                      @OA\Property(property="profile",
+     *                          @OA\Property(property="name", type="string"),
+     *                          @OA\Property(property="lastname", type="string"),
+     *                          @OA\Property(property="email", type="string"),
+     *                          @OA\Property(property="created_at", type="string"),
+     *                          @OA\Property(property="updated_at", type="string"),
+     *                      ),
+     *                      @OA\Property(property="token", type="string"),
+     *              ),
+     *          )
+     *       ),
+     *     )
+     */
     public function login(Request $request)
     {
         $request_data = $request->validate(User::LOGIN_RULES);

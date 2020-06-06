@@ -90,7 +90,7 @@ return [
         |--------------------------------------------------------------------------
         */
 
-        'views' => base_path('resources/views/vendor/l5-swagger'),
+        'views' => base_path('resources/views/vendor/documentation'),
 
         /*
         |--------------------------------------------------------------------------
