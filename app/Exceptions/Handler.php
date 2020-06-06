@@ -3,9 +3,11 @@
 namespace App\Exceptions;
 
 use Illuminate\Auth\AuthenticationException;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Contracts\Support\Responsable;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Routing\Router;
 use Illuminate\Validation\ValidationException;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -42,6 +44,22 @@ class Handler extends ExceptionHandler
     }
 
     /**
+     * Create a response object from the given validation exception.
+     *
+     * @param  \Illuminate\Validation\ValidationException  $e
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    protected function convertValidationExceptionToResponse(ValidationException $e, $request)
+    {
+        if ($e->response) {
+            return $e->response;
+        }
+
+        return $this->invalidJson($request, $e);
+    }
+
+    /**
      * Report or log an exception.
      *
      * @param  \Throwable  $exception
@@ -58,35 +76,29 @@ class Handler extends ExceptionHandler
      * Render an exception into an HTTP response.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \Throwable  $exception
+     * @param  \Throwable $exception
      * @return \Symfony\Component\HttpFoundation\Response
      *
      * @throws \Throwable
      */
     public function render($request, Throwable $exception)
     {
-        return parent::render($request, $exception);
+        if (method_exists($exception, 'render') && $response = $exception->render($request)) {
+            return Router::toResponse($request, $response);
+        } elseif ($exception instanceof Responsable) {
+            return $exception->toResponse($request);
+        }
 
-        // dd($exception);
-        // if ($exception instanceof ModelNotFoundException) {
-        //     return  response()->json(
-        //         ['message' => trans(
-        //             'exception.not_found',
-        //             ['resource' => trans('exception.resource.' . $exception->getModel())]
-        //         )],
-        //         404
-        //     );
-        // }
+        $exception = $this->prepareException($exception);
 
-        // $response = ['errorMessage' => trans('exception.internal_error')];
+        if ($exception instanceof HttpException) {
+            return $exception->getResponse();
+        } elseif ($exception instanceof AuthenticationException) {
+            return $this->unauthenticated($request, $exception);
+        } elseif ($exception instanceof ValidationException) {
+            return $this->convertValidationExceptionToResponse($exception, $request);
+        }
 
-        // if (config('app.env') === 'local') {
-        //     $response = array_merge($response, [
-        //         'error' => $exception->getMessage(),
-        //         'trace' => $exception->getTrace(),
-        //     ]);
-        // }
-
-        // return response()->json($response,  500);
+        return $this->prepareJsonResponse($request, $exception);
     }
 }

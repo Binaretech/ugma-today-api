@@ -14,52 +14,43 @@ use Illuminate\Auth\AuthenticationException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 
+/**
+ * @group Auth
+ * 
+ * Authentication related routes
+ */
 class AuthController extends Controller
 {
     use TransactionTrait;
 
     /**
      * Register new user
+     *
      * @param Request $request
      * @return UserResource
      * 
      * @throws Exception on creation failure
      * 
-     * @OA\Post(
-     *      path="/register",
-     *      operationId="register",
-     *      tags={"Auth"},
-     *      summary="Register new user",
-     *      description="Create a user and return their data",
-     *      @OA\RequestBody(
-     *          @OA\JsonContent(
-     *              @OA\Property(property="username", type="string", description="Username in the platform"),
-     *              @OA\Property(property="password", type="string", description="Password for login"),
-     *              @OA\Property(property="name", type="string", description="User's first name"),
-     *              @OA\Property(property="lastname", type="string", description="User's last name"),
-     *              @OA\Property(property="email", type="string", description="User's email"),
-     *          )
-     *      ),
-     *      @OA\Response(
-     *          response=200,
-     *          description="successful operation",
-     *          @OA\JsonContent(
-     *              @OA\Property(property="data", 
-     *                      @OA\Property(property="id", type="int"),
-     *                      @OA\Property(property="username", type="string"),
-     *                      @OA\Property(property="type", type="int"),
-     *                      @OA\Property(property="profile",
-     *                          @OA\Property(property="name", type="string"),
-     *                          @OA\Property(property="lastname", type="string"),
-     *                          @OA\Property(property="email", type="string"),
-     *                          @OA\Property(property="created_at", type="string"),
-     *                          @OA\Property(property="updated_at", type="string"),
-     *                      ),
-     *                      @OA\Property(property="token", type="string"),
-     *              ),
-     *          )
-     *       ),
-     *     )
+     * @bodyParam username string required New username in the app.
+     * @bodyParam password string required For authenticate with the app.
+     * @bodyParam name string required User's first name. Example: lorem@gmail.com
+     * @bodyParam lastname string required User's last name.
+     * @bodyParam email email required User's email.
+     * @bodyParam withTimestamps optional Show records timestamps
+     * @response {
+     * "data": {
+     *     "id": 73,
+     *     "username": "alanbrito",
+     *     "type": 0,
+     *     "profile": {
+     *         "user_id": 73,
+     *         "name": "Alan",
+     *         "lastname": "Brito",
+     *         "email": "alanbrito@gmail.com"
+     *     },
+     *     "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIxIiwianRpIjoiMDEyNDRjMTExNjMwMTJmMTQxOWRjNjYxZGRiOGVmZGE1MjFlZjA3NTI5MGE2OWFjNjBlYTRiOGZmMjljYTIwNWYxOTg0ODZiOWVmMTgwNzUiLCJpYXQiOjE1OTE0NjM4MjgsIm5iZiI6MTU5MTQ2MzgyOCwiZXhwIjoxNjIyOTk5ODI4LCJzdWIiOiI3MyIsInNjb3BlcyI6WyJVU0VSIl19.cjYa0EOWRdakcdzBrLb2GF5ytFHYyKz9opCD1NJlt-l9Bw5xjrv2ShI8n2IchuvqUjT6LKb_GjdhcMNg4nWebkj5BTOn-Owj30qg61Mob_wZ1Q2otnJiSHoPgZHnHoAip6SdTlkYBPMtRIwBI1fp1ZBtwaquIKx2hrWYI3V5T6ZTAqeBo_72trW3fVARkMDXav_d3Kji-rrtiv02XgMQXmEWs0eA0ujXFjapi5VoR-nYxnzP3FlBnmtiTpM6mjV9f5Dr7385rBFGGb-c30eR46IeEkUwaH4ejEEPp6zsqYsnRftDn0O0XvW3vlvraRJDU9KHusA3HAzk7vqD9agquZAqGvEqm7pi5KdwLUIjCkekSCdYSSnGSvbQQXT8KBjhghQdem0fnkE8eULI73Zv1YQxLpY6PIVEoM4uGeVx1U3UMmKhgCIwyugJ6h1ypt55hves6zh8aYV8EYF3vDi3uFCkkXk731psrt9nihTQxMcilXY3Bz5SIqb6-Txk72SwoTrRqb1ZCI8a7VB5mYTkw_xaOPB3visszQCFOUVPXIliJRZ7nrHj9ANUCbrgqyqbFirkyXCwi6pD_Lh-0d2i_4IJoilFQfAvzmTIUj8FCa9KuPqIHdIaseULZjIHnrOD3ZYpX5rfUJDBoutVBEBfckw9Lof-mfQlsaWCsamGt20"
+     *  }
+     * }
      */
     public function register(Request $request)
     {
@@ -77,44 +68,29 @@ class AuthController extends Controller
 
     /**
      * Authenticate user
+     *
      * @param Request $request
      * @return UserResource
      * 
-     * @throws Exception on failure while authenticating user
+     * @throws Exception on creation failure
      * 
-     * @OA\Post(
-     *      path="/login",
-     *      operationId="login",
-     *      tags={"Auth"},
-     *      summary="Authenticate user",
-     *      description="Authenticate user and return their data",
-     *      @OA\RequestBody(
-     *          required=true,
-     *          @OA\JsonContent(
-     *              @OA\Property(property="username", type="string"),
-     *              @OA\Property(property="password", type="string"),
-     *          )
-     *      ),
-     *      @OA\Response(
-     *          response=200,
-     *          description="successful operation",
-     *          @OA\JsonContent(
-     *              @OA\Property(property="data", 
-     *                      @OA\Property(property="id", type="int"),
-     *                      @OA\Property(property="username", type="string"),
-     *                      @OA\Property(property="type", type="int"),
-     *                      @OA\Property(property="profile",
-     *                          @OA\Property(property="name", type="string"),
-     *                          @OA\Property(property="lastname", type="string"),
-     *                          @OA\Property(property="email", type="string"),
-     *                          @OA\Property(property="created_at", type="string"),
-     *                          @OA\Property(property="updated_at", type="string"),
-     *                      ),
-     *                      @OA\Property(property="token", type="string"),
-     *              ),
-     *          )
-     *       ),
-     *     )
+     * @bodyParam username string required New username in the app.
+     * @bodyParam password string required For authenticate with the app.
+     * @bodyParam withTimestamps optional Show records timestamps
+     * @response {
+     * "data": {
+     *     "id": 73,
+     *     "username": "alanbrito",
+     *     "type": 0,
+     *     "profile": {
+     *         "user_id": 73,
+     *         "name": "Alan",
+     *         "lastname": "Brito",
+     *         "email": "alanbrito@gmail.com"
+     *     },
+     *     "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIxIiwianRpIjoiMDEyNDRjMTExNjMwMTJmMTQxOWRjNjYxZGRiOGVmZGE1MjFlZjA3NTI5MGE2OWFjNjBlYTRiOGZmMjljYTIwNWYxOTg0ODZiOWVmMTgwNzUiLCJpYXQiOjE1OTE0NjM4MjgsIm5iZiI6MTU5MTQ2MzgyOCwiZXhwIjoxNjIyOTk5ODI4LCJzdWIiOiI3MyIsInNjb3BlcyI6WyJVU0VSIl19.cjYa0EOWRdakcdzBrLb2GF5ytFHYyKz9opCD1NJlt-l9Bw5xjrv2ShI8n2IchuvqUjT6LKb_GjdhcMNg4nWebkj5BTOn-Owj30qg61Mob_wZ1Q2otnJiSHoPgZHnHoAip6SdTlkYBPMtRIwBI1fp1ZBtwaquIKx2hrWYI3V5T6ZTAqeBo_72trW3fVARkMDXav_d3Kji-rrtiv02XgMQXmEWs0eA0ujXFjapi5VoR-nYxnzP3FlBnmtiTpM6mjV9f5Dr7385rBFGGb-c30eR46IeEkUwaH4ejEEPp6zsqYsnRftDn0O0XvW3vlvraRJDU9KHusA3HAzk7vqD9agquZAqGvEqm7pi5KdwLUIjCkekSCdYSSnGSvbQQXT8KBjhghQdem0fnkE8eULI73Zv1YQxLpY6PIVEoM4uGeVx1U3UMmKhgCIwyugJ6h1ypt55hves6zh8aYV8EYF3vDi3uFCkkXk731psrt9nihTQxMcilXY3Bz5SIqb6-Txk72SwoTrRqb1ZCI8a7VB5mYTkw_xaOPB3visszQCFOUVPXIliJRZ7nrHj9ANUCbrgqyqbFirkyXCwi6pD_Lh-0d2i_4IJoilFQfAvzmTIUj8FCa9KuPqIHdIaseULZjIHnrOD3ZYpX5rfUJDBoutVBEBfckw9Lof-mfQlsaWCsamGt20"
+     *  }
+     * }
      */
     public function login(Request $request)
     {
@@ -128,6 +104,16 @@ class AuthController extends Controller
         return new AuthResource($user);
     }
 
+    /**
+     * Send email to recover password
+     *
+     * @param Request $request
+     * @return UserResource
+     * 
+     * @throws Exception on creation failure
+     * 
+     * @bodyParam email required Password recovery email address
+     */
     public function password_reset_email(Request $request)
     {
         $request_data = $request->validate(User::PASSWORD_RESET_RULES);
@@ -150,6 +136,18 @@ class AuthController extends Controller
         ]);
     }
 
+
+    /**
+     * Reset password
+     *
+     * @param Request $request
+     * @return Illuminate\Http\JsonResponse
+     * 
+     * @throws Exception on creation failure
+     * 
+     * @bodyParam token required Password recovery token
+     * @bodyParam password required New password
+     */
     public function reset_password(Request $request)
     {
         $request_data = $request->validate(User::reset_rules());

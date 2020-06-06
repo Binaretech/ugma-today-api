@@ -19,7 +19,11 @@ class UserResource extends JsonResource
             'username' => $this->username,
             'status' => $this->status,
             'type' => $this->type,
-            'profile' => $this->whenLoaded('profile'),
+            'profile' => new ProfileResource($this->whenLoaded('profile')),
+            $this->mergeWhen($request->get('withTimestamps') === true, [
+                'created_at' => $this->created_at,
+                'updated_at' => $this->updated_at,
+            ])
         ];
     }
 }
