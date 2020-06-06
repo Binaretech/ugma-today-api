@@ -1,5 +1,8 @@
 image: php:latest
 
+include:
+  - template: SAST.gitlab-ci.yml
+
 services:
   - postgres:latest
   - mailhog/mailhog:latest
