@@ -3,6 +3,7 @@
 namespace Tests\Unit;
 
 use App\Comment;
+use App\File;
 use App\Like;
 use App\Post;
 use App\Report;
@@ -64,5 +65,17 @@ class PostTest extends TestCase
 
         $this->assertNotEmpty($post->reports);
         $this->assertCount(10, $post->reports);
+    }
+
+    public function test_files_relation()
+    {
+        $post = factory(Post::class)->create([
+            'user_id' => factory(User::class)->create()
+        ]);
+
+        $post->files()->save(factory(File::class)->make());
+
+        $this->assertNotEmpty($post->files);
+        $this->assertCount(1, $post->files);
     }
 }

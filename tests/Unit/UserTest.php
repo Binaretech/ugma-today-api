@@ -4,10 +4,13 @@ namespace Tests\Unit;
 
 use App\Comment;
 use App\Feedback;
+use App\File;
 use App\Like;
+use App\PasswordReset;
 use App\Post;
 use App\Report;
 use App\User;
+use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
@@ -16,6 +19,28 @@ class UserTest extends TestCase
 {
 
     use RefreshDatabase, WithFaker;
+
+    /*----------------------------------------------*/
+    /*                TEST RELATIONS                */
+    /*----------------------------------------------*/
+
+    public function test_password_reset_relation()
+    {
+        $user = factory(User::class)->create();
+
+        $token = base64_encode($user->id . password_hash(time() . rand(-99999, 99999), PASSWORD_DEFAULT) . uniqid());
+        $expire = Carbon::now()->addHours(2);
+        $user->password_reset()->save(new PasswordReset([
+            'token' => $token,
+            'expire_at' => $expire
+        ]));
+
+        $password_reset = $user->password_reset;
+
+        $this->assertNotNull($password_reset);
+        $this->assertEquals($token, $password_reset->token);
+        $this->assertEquals($expire, $password_reset->expire_at);
+    }
 
     public function test_profile_relation()
     {
@@ -121,5 +146,74 @@ class UserTest extends TestCase
 
         $this->assertNotEmpty($user->feedback);
         $this->assertCount(10, $user->feedback);
+    }
+
+
+    public function test_file_relation()
+    {
+        $user = factory(User::class)->create();
+
+        $user->file()->save(factory(File::class)->make());
+
+        $this->assertNotEmpty($user->file);
+    }
+
+    /*----------------------------------------------*/
+    /*                TEST RULES                */
+    /*----------------------------------------------*/
+
+    public function test_reset_rules()
+    {
+        $rules = User::reset_rules();
+        $this->assertNotEmpty($rules);
+    }
+
+    /*----------------------------------------------*/
+    /*          TEST ACCESSORS/MUTATORS             */
+    /*----------------------------------------------*/
+
+    public function test_password_mutator()
+    {
+        $user = factory(User::class)->create(['password' => 'secret']);
+        $this->assertNotEquals('secret', $user->password);
+    }
+
+    /*----------------------------------------------*/
+    /*                TEST SCOPES                   */
+    /*----------------------------------------------*/
+
+
+    public function test_scopes()
+    {
+        factory(User::class, 5)->states([
+            'admin',
+            'active',
+        ])->create();
+
+        factory(User::class, 20)->states([
+            'user',
+            'active',
+        ])->create();
+
+        factory(User::class, 20)->states([
+            'user',
+            'banned'
+        ])->create();
+
+        User::admin()->get()->each(function (User $user) {
+            $this->assertEquals(User::TYPES['ADMIN'], $user->type);
+        });
+
+        User::user()->get()->each(function (User $user) {
+            $this->assertEquals(User::TYPES['USER'], $user->type);
+        });
+
+        User::active()->get()->each(function (User $user) {
+            $this->assertEquals(User::STATUS['ACTIVE'], $user->status);
+        });
+
+        User::banned()->get()->each(function (User $user) {
+            $this->assertEquals(User::STATUS['BANNED'], $user->status);
+        });
     }
 }

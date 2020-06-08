@@ -14,6 +14,8 @@ class UserControllerTest extends TestCase
 
     public function test_index()
     {
+        factory(User::class, 10)->create();
+
         Passport::actingAs(factory(User::class)->create(), ['ADMIN']);
         $this->get('api/user')->assertOk()->assertJsonStructure(['data', 'links', 'meta']);
     }
@@ -25,6 +27,15 @@ class UserControllerTest extends TestCase
         Passport::actingAs($user, [User::TYPES[$user->type]]);
 
         $this->get('api/user/' . $user->id)->assertOk()->assertJsonStructure(['data']);
+    }
+
+    public function test_show_not_found()
+    {
+        $user = factory(User::class)->create();
+
+        Passport::actingAs($user, [User::TYPES[$user->type]]);
+
+        $this->get('api/user/1000')->assertNotFound();
     }
 
     public function test_ban()
