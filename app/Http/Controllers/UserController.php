@@ -8,6 +8,13 @@ use App\Traits\TransactionTrait;
 use App\User;
 use Illuminate\Http\Request;
 
+/**
+ * @authenticated
+ * 
+ * @group User
+ * 
+ * User related routes
+ */
 class UserController extends Controller
 {
     use TransactionTrait;
@@ -17,7 +24,16 @@ class UserController extends Controller
         $this->middleware('scope:ADMIN')->only(['index', 'ban', 'active']);
     }
 
-    public function index(Request $request)
+    /**
+     * Get users list
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     * 
+     * @apiResourceCollection  App\Http\Resources\UserResource
+     * @apiResourceModel  App\User
+     */
+    public function index(Request $request): \Illuminate\Http\Resources\Json\AnonymousResourceCollection
     {
         $request->validate(User::FILTER_RULES);
 
@@ -41,10 +57,25 @@ class UserController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Display the specified user.
      *
-     * @param  int  $id
+     * @param  User  $user
      * @return \Illuminate\Http\Response
+     * 
+     * @urlParam user required User by id. Example: 2
+     * @response {
+        "data": {
+            "id": null,
+            "username": "era.hickle",
+            "status": 0,
+            "type": 0,
+            "profile": {
+                "name": "Jaeden Padberg",
+                "lastname": "West",
+                "email": "lia.oconnell@example.net"
+                }
+            }
+        }
      */
     public function show(User $user)
     {
@@ -52,11 +83,21 @@ class UserController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Update the specified user
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
+     * 
+     * @bodyParam username optional Change username
+     * @bodyParam password optional Change password
+     * @bodyParam name optional Change name
+     * @bodyParam lastname optional Change lastname
+     * @bodyParam email optional Change email. Example lorem@mail.com
+     * 
+     * @response {
+     *  "message": "Success."
+     * }
      */
     public function update(Request $request)
     {
@@ -67,10 +108,18 @@ class UserController extends Controller
             $user->update($request_data);
             $user->profile->update($request_data);
         });
-
-        return response()->json(['message' => trans('responses.success')]);
     }
 
+    /**
+     * Ban user (admin only)
+     *
+     * @param User $user
+     * @return void
+     * @urlParam user required User by id. Example: 2
+     * @response {
+     *  "message": "Success."
+     * }
+     */
     public function ban(User $user)
     {
         $user->status = User::STATUS['BANNED'];
@@ -81,6 +130,16 @@ class UserController extends Controller
         return response()->json(['message' => trans('responses.success')]);
     }
 
+    /**
+     * Active user (admin only)
+     *
+     * @param User $user
+     * @return void
+     * @urlParam user required User by id. Example: 2
+     * @response {
+     *  "message": "Success."
+     * }
+     */
     public function active(User $user)
     {
         $user->status = User::STATUS['ACTIVE'];
@@ -92,10 +151,15 @@ class UserController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Remove the specified user.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
+     * @urlParam user required User by id. Example: 2
+     * 
+     * @response {
+     *  "message": "Success."
+     * }
      */
     public function destroy(Request $request)
     {

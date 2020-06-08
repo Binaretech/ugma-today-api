@@ -37,7 +37,7 @@ class AuthController extends Controller
      * @bodyParam lastname string required User's last name.
      * @bodyParam email email required User's email.
      * @bodyParam withTimestamps optional Show records timestamps
-     * @response {
+     * @response 201 {
      * "data": {
      *     "id": 73,
      *     "username": "alanbrito",
@@ -113,6 +113,9 @@ class AuthController extends Controller
      * @throws Exception on creation failure
      * 
      * @bodyParam email required Password recovery email address
+     * @response {
+     *  "message": "Success."
+     * }
      */
     public function password_reset_email(Request $request)
     {
@@ -147,6 +150,9 @@ class AuthController extends Controller
      * 
      * @bodyParam token required Password recovery token
      * @bodyParam password required New password
+     * @response {
+     *  "message": "Success."
+     * }
      */
     public function reset_password(Request $request)
     {

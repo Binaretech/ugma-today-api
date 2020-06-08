@@ -3,11 +3,9 @@
 namespace App\Exceptions;
 
 use Illuminate\Auth\AuthenticationException;
-use Illuminate\Contracts\Support\Responsable;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
-use Illuminate\Routing\Router;
 use Illuminate\Validation\ValidationException;
-use Symfony\Component\HttpKernel\Exception\HttpException;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -17,9 +15,7 @@ class Handler extends ExceptionHandler
      *
      * @var array
      */
-    protected $dontReport = [
-        ValidationException::class
-    ];
+    protected $dontReport = [];
 
     /**
      * A list of the inputs that are never flashed for validation exceptions.
@@ -83,22 +79,16 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Throwable $exception)
     {
-        if (method_exists($exception, 'render') && $response = $exception->render($request)) {
-            return Router::toResponse($request, $response);
-        } elseif ($exception instanceof Responsable) {
-            return $exception->toResponse($request);
+        if ($exception instanceof ModelNotFoundException) {
+            return  response()->json(
+                ['message' => trans(
+                    'exception.not_found',
+                    ['resource' => trans('exception.resource.' . $exception->getModel())]
+                )],
+                404
+            );
         }
 
-        $exception = $this->prepareException($exception);
-
-        if ($exception instanceof HttpException) {
-            return $exception->getResponse();
-        } elseif ($exception instanceof AuthenticationException) {
-            return $this->unauthenticated($request, $exception);
-        } elseif ($exception instanceof ValidationException) {
-            return $this->convertValidationExceptionToResponse($exception, $request);
-        }
-
-        return $this->prepareJsonResponse($request, $exception);
+        return parent::render($request, $exception);
     }
 }

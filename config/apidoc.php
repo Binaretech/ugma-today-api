@@ -12,7 +12,7 @@ return [
     /*
      * Static output folder: HTML documentation and assets will be generated in this folder.
      */
-   'output_folder' => 'public/docs',
+    'output_folder' => 'public/docs',
 
     /*
      * Settings for `laravel` type output.
@@ -109,7 +109,7 @@ return [
                  * Match only routes whose paths match this pattern (use * as a wildcard to match any characters).
                  */
                 'prefixes' => [
-                    '*',
+                    'api/*',
                     // 'users/*',
                 ],
 
@@ -150,7 +150,7 @@ return [
                 'headers' => [
                     'Content-Type' => 'application/json',
                     'Accept' => 'application/json',
-                    // 'Authorization' => 'Bearer {token}',
+                    'Authorization' => 'Bearer {token}',
                     // 'Api-Version' => 'v2',
                 ],
 
@@ -164,7 +164,7 @@ return [
                      * API calls will be made only for routes in this group matching these HTTP methods (GET, POST, etc).
                      * List the methods here or use '*' to mean all methods. Leave empty to disable API calls.
                      */
-                    'methods' => ['GET'],
+                    'methods' => [],
 
                     /*
                      * Laravel config variables which should be set for the API call.
@@ -174,7 +174,7 @@ return [
                      */
                     'config' => [
                         'app.env' => 'documentation',
-                        'app.debug' => false,
+                        'app.debug' => true,
                         // 'service.key' => 'value',
                     ],
 

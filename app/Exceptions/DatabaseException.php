@@ -19,10 +19,10 @@ class DatabaseException extends Exception
      */
     public function render(Request $request)
     {
-        $response = ['errorMessage' => $this->message];
+        $response = ['message' => $this->message];
 
         $previous = $this->getPrevious();
-        if (config('app.env') === 'local' && isset($previous)) {
+        if (config('app.debug') && isset($previous)) {
             $response = array_merge($response, [
                 'error' => $previous->getMessage(),
                 'trace' => $previous->getTrace(),
