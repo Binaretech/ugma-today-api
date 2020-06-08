@@ -15,9 +15,7 @@ class Handler extends ExceptionHandler
      *
      * @var array
      */
-    protected $dontReport = [
-        ValidationException::class
-    ];
+    protected $dontReport = [];
 
     /**
      * A list of the inputs that are never flashed for validation exceptions.
@@ -42,6 +40,22 @@ class Handler extends ExceptionHandler
     }
 
     /**
+     * Create a response object from the given validation exception.
+     *
+     * @param  \Illuminate\Validation\ValidationException  $e
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    protected function convertValidationExceptionToResponse(ValidationException $e, $request)
+    {
+        if ($e->response) {
+            return $e->response;
+        }
+
+        return $this->invalidJson($request, $e);
+    }
+
+    /**
      * Report or log an exception.
      *
      * @param  \Throwable  $exception
@@ -58,35 +72,23 @@ class Handler extends ExceptionHandler
      * Render an exception into an HTTP response.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \Throwable  $exception
+     * @param  \Throwable $exception
      * @return \Symfony\Component\HttpFoundation\Response
      *
      * @throws \Throwable
      */
     public function render($request, Throwable $exception)
     {
+        if ($exception instanceof ModelNotFoundException) {
+            return  response()->json(
+                ['message' => trans(
+                    'exception.not_found',
+                    ['resource' => trans('exception.resource.' . $exception->getModel())]
+                )],
+                404
+            );
+        }
+
         return parent::render($request, $exception);
-
-        // dd($exception);
-        // if ($exception instanceof ModelNotFoundException) {
-        //     return  response()->json(
-        //         ['message' => trans(
-        //             'exception.not_found',
-        //             ['resource' => trans('exception.resource.' . $exception->getModel())]
-        //         )],
-        //         404
-        //     );
-        // }
-
-        // $response = ['errorMessage' => trans('exception.internal_error')];
-
-        // if (config('app.env') === 'local') {
-        //     $response = array_merge($response, [
-        //         'error' => $exception->getMessage(),
-        //         'trace' => $exception->getTrace(),
-        //     ]);
-        // }
-
-        // return response()->json($response,  500);
     }
 }

@@ -9,12 +9,6 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Passport\HasApiTokens;
 
-/**
- * @OA\Schema(
- *     title="User model",
- *     description="User model",
- * )
- */
 class User extends Authenticatable
 {
     use Notifiable, HasApiTokens, SoftDeletes;
@@ -61,8 +55,8 @@ class User extends Authenticatable
     public const FILTER_RULES = [
         'type' => 'sometimes|required|numeric|between:0,1',
         'status' => 'sometimes|required|numeric|between:0,1',
-        'with_deleted' => 'sometimes|required|boolean',
-        'deleted_only' => 'sometimes|required|boolean',
+        'with_deleted' => 'sometimes|boolean',
+        'deleted_only' => 'sometimes|boolean',
     ];
 
     public const UPDATE_RULES = [
@@ -147,7 +141,7 @@ class User extends Authenticatable
 
     public function scopeActive($query)
     {
-        return $query->where('status', User::STATUS['ACTIVE']);
+        return $query->where('status', 1);
     }
 
     public function scopeBanned($query)

@@ -42,6 +42,24 @@ class AuthTest extends TestCase
         ])->assertOk();
     }
 
+    public function test_fail_login()
+    {
+        $register = [
+            'username' => $this->faker->userName,
+            'password' => $this->faker->password,
+            'name' => $this->faker->name,
+            'lastname' => $this->faker->lastName,
+            'email' => $this->faker->safeEmail,
+        ];
+
+        $this->post('api/register', $register);
+
+        $this->post('api/login', [
+            'username' => $register['username'],
+            'password' => 'not the correct password',
+        ])->assertUnauthorized();
+    }
+
     public function test_password_reset_email()
     {
         $register = [

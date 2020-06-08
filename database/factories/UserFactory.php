@@ -22,7 +22,7 @@ $factory->define(User::class, function (Faker $faker) {
     return [
         'username' => $faker->userName,
         'email_verified_at' => now(),
-        'type' => $faker->numberBetween(0, 1),
+        'type' => $faker->randomElement([User::STATUS['ACTIVE'], User::STATUS['BANNED']]),
         'status' => $faker->numberBetween(0, 1),
         'password' => 'secret',
         'remember_token' => Str::random(10),
