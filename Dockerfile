@@ -1,15 +1,20 @@
 FROM php:7.4-apache
 
 ENV APACHE_DOCUMENT_ROOT /app/public
+COPY . /app
 
-RUN apt-get update -y
-RUN apt-get install -y libpq-dev libxml2-dev curl libonig-dev
+RUN apt-get update -y && apt-get install -y libpq-dev libxml2-dev curl libonig-dev && rm -r /var/lib/apt/lists/*
+RUN docker-php-ext-install bcmath mbstring pdo_pgsql xml pgsql intl zip
 
-RUN docker-php-ext-install bcmath mbstring pdo_pgsql xml pgsql intl
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+
+WORKDIR /app
+
+RUN composer install
 
 RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf
 RUN sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf
 
-RUN usermod -aG www-data root
+EXPOSE 80
 
 RUN a2enmod rewrite headers
