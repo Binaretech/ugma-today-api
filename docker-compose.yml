@@ -2,6 +2,7 @@ version: "3"
 
 services: 
   api:
+    image: registry.gitlab.com/ugma-today/ugma-today-api
     build: .
     volumes:
       - .:/app
