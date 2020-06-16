@@ -6,7 +6,11 @@ COPY . /app
 RUN apt-get update -y && apt-get install -y libpq-dev libxml2-dev libzip-dev curl libonig-dev && rm -r /var/lib/apt/lists/*
 RUN docker-php-ext-install bcmath mbstring pdo_pgsql xml pgsql intl zip
 
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+
 WORKDIR /app
+
+RUN composer install
 
 RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf
 RUN sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf

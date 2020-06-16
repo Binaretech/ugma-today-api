@@ -25,8 +25,10 @@ buid-image:
   before_script:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD registry.gitlab.com
   script:
-    - docker build --pull -t registry.gitlab.com/ugma-today/ugma-today-api .
+    - docker build --pull -t registry.gitlab.com/ugma-today/ugma-today-api -f production.Dockerfile .
     - docker push registry.gitlab.com/ugma-today/ugma-today-api
+    - docker build --pull -t registry.gitlab.com/ugma-today/ugma-today-api/dev -f Dockerfile .
+    - docker push registry.gitlab.com/ugma-today/ugma-today-api/dev
 
 test:
   image: php:latest
