@@ -27,12 +27,15 @@ class CommentTest extends TestCase
 
     public function test_post_relation()
     {
+        $user = factory(User::class)->create();
+        $post = factory(Post::class)->create([
+            'user_id' => $user->id
+        ]);
+
         $comment = factory(Comment::class)
-            ->make([
-                'user_id' => factory(User::class)->create(),
-                'post_id' => factory(Post::class)->create([
-                    'user_id' => factory(User::class)->create()
-                ]),
+            ->create([
+                'user_id' => $user->id,
+                'post_id' => $post->id,
             ]);
 
         $this->assertNotNull($comment->post);
@@ -41,9 +44,10 @@ class CommentTest extends TestCase
 
     public function test_reports_relation()
     {
+        $user = factory(User::class)->create();
         $comment = factory(Comment::class)
             ->create([
-                'user_id' => factory(User::class)->create(),
+                'user_id' => $user->id,
                 'post_id' => factory(Post::class)->create([
                     'user_id' => factory(User::class)->create()
                 ]),
@@ -54,14 +58,19 @@ class CommentTest extends TestCase
         ]));
 
         $this->assertNotNull($comment->post);
-        $this->assertDatabaseHas('reports', ['id' => $comment->post->id]);
+        $this->assertDatabaseHas('reports', [
+            'reportable_id' => $comment->id,
+            'reportable_type' => Comment::class
+        ]);
     }
 
     public function test_likes_relation()
     {
+        $user = factory(User::class)->create();
+
         $comment = factory(Comment::class)
             ->create([
-                'user_id' => factory(User::class)->create(),
+                'user_id' => $user->id,
                 'post_id' => factory(Post::class)->create([
                     'user_id' => factory(User::class)->create()
                 ]),
@@ -74,5 +83,29 @@ class CommentTest extends TestCase
 
         $this->assertNotEmpty($comment->likes);
         $this->assertCount(1, $comment->likes);
+    }
+
+    public function test_answer_to_and_replies_relations()
+    {
+        $post = factory(Post::class)->create([
+            'user_id' => factory(User::class)->create()
+        ]);
+
+        $comment = factory(Comment::class)
+            ->create([
+                'user_id' => factory(User::class)->create(),
+                'post_id' => $post->id,
+            ]);
+
+        $replyComment = factory(Comment::class)
+            ->create([
+                'user_id' => factory(User::class)->create(),
+                'post_id' => $post->id,
+            ]);
+
+        $comment->replies()
+            ->save($replyComment);
+
+        $this->assertNotEmpty($comment->replies);
     }
 }

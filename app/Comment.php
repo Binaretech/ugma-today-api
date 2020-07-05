@@ -25,4 +25,14 @@ class Comment extends Model
     {
         return $this->morphMany(Like::class, 'likeable');
     }
+
+    public function answer_to()
+    {
+        return $this->belongsTo(Comment::class, 'answer_to');
+    }
+
+    public function replies()
+    {
+        return $this->hasMany(Comment::class, 'answer_to');
+    }
 }

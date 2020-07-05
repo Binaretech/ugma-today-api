@@ -124,6 +124,16 @@ class User extends Authenticatable
         return $this->hasMany(Feedback::class);
     }
 
+    public function modified_costs()
+    {
+        return $this->hasMany(Cost::class, 'modified_by');
+    }
+
+    public function modified_advices()
+    {
+        return $this->hasMany(Advice::class, 'modified_by');
+    }
+
     public function setPasswordAttribute($value)
     {
         $this->attributes['password'] = bcrypt($value);

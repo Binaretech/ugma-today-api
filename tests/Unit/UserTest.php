@@ -3,6 +3,7 @@
 namespace Tests\Unit;
 
 use App\Comment;
+use App\Cost;
 use App\Feedback;
 use App\File;
 use App\Like;
@@ -52,7 +53,9 @@ class UserTest extends TestCase
     public function test_post_relation()
     {
         $user = factory(User::class)->create();
-        $user->posts()->saveMany(factory(Post::class, 10)->make());
+        $user->posts()->saveMany(factory(Post::class, 10)->make([
+            'id' => Post::generate_id($user->id),
+        ]));
 
         $this->assertNotEmpty($user->posts);
         $this->assertCount(10, $user->posts);
@@ -63,6 +66,7 @@ class UserTest extends TestCase
         $user = factory(User::class)->create();
 
         factory(Post::class)->create([
+            'id' => Post::generate_id($user->id),
             'user_id' => factory(User::class)->create(),
         ])->each(function (Post $post) use ($user) {
             $post->comments()->saveMany(factory(Comment::class, 10)->make([
@@ -148,7 +152,6 @@ class UserTest extends TestCase
         $this->assertCount(10, $user->feedback);
     }
 
-
     public function test_file_relation()
     {
         $user = factory(User::class)->create();
@@ -156,6 +159,18 @@ class UserTest extends TestCase
         $user->file()->save(factory(File::class)->make());
 
         $this->assertNotEmpty($user->file);
+    }
+
+    public function test_modified_cost_relation()
+    {
+        $user = factory(User::class)->create();
+
+        factory(Cost::class)->create([
+            'name' => $this->faker->randomElement(['Odontología', 'Ingeniería']),
+            'modified_by' => $user->id,
+        ]);
+
+        $this->assertNotEmpty($user->modified_costs);
     }
 
     /*----------------------------------------------*/

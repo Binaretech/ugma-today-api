@@ -8,6 +8,7 @@ use Faker\Generator as Faker;
 $factory->define(Cost::class, function (Faker $faker) {
     return [
         'price' => $faker->randomFloat(2),
-        'message' => $faker->boolean() ? $faker->realText(128) : null,
+        'comment' => $faker->boolean() ? $faker->realText(128) : null,
+        'currency' => $faker->randomElement([0, 1])
     ];
 });

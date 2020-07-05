@@ -22,17 +22,17 @@ class PostTableSeeder extends Seeder
     {
         $this->users->random(10)->each(function (User $user) {
             $posts_quantity = rand(1, 3);
-            $user->posts()->saveMany(
-                factory(Post::class, $posts_quantity)->make([
-                    'type' => rand(0, 1)
-                ])
-            );
+            factory(Post::class, $posts_quantity)->make([
+                'type' => rand(0, 1)
+            ])->each(function (Post $post) use ($user) {
+                $post->id = Post::generate_id($user->id);
+                $user->posts()->save($post);
+            });
         });
 
         $this->users->each(function (User $user) {
             Post::where('type', Post::TYPES['PUBLISHED'])->get()
                 ->each(function (Post $post) use ($user) {
-                    // dump($post);
                     $comments_quantity = rand(1, 3);
                     $post->comments()->saveMany(
                         factory(Comment::class, $comments_quantity)->make([

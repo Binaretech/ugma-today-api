@@ -17,8 +17,10 @@ class PostTest extends TestCase
 
     public function test_user_relation()
     {
-        $posts = factory(User::class)
-            ->create()->posts()->save(factory(Post::class)->make());
+        $user = factory(User::class)
+            ->create();
+
+        $posts = $user->posts()->save(factory(Post::class)->make());
 
         $this->assertNotEmpty($posts);
         $this->assertNotNull($posts->user);
@@ -26,8 +28,11 @@ class PostTest extends TestCase
 
     public function test_comments_relation()
     {
-        $post = factory(Post::class)
-            ->create(['user_id' => factory(User::class)->create()]);
+        $user =  factory(User::class)->create();
+
+        $post = factory(Post::class)->create([
+            'user_id' => $user->id
+        ]);
 
         $post->comments()
             ->saveMany(factory(Comment::class, 10)
@@ -39,8 +44,11 @@ class PostTest extends TestCase
 
     public function test_likes_relation()
     {
+        $user =  factory(User::class)->create();
         $post = factory(Post::class)
-            ->create(['user_id' => factory(User::class)->create()]);
+            ->create([
+                'user_id' => $user->id
+            ]);
 
         $post->likes()
             ->save(new Like([
@@ -53,8 +61,10 @@ class PostTest extends TestCase
 
     public function test_reports_relation()
     {
+        $user =  factory(User::class)->create();
+
         $post = factory(Post::class)->create([
-            'user_id' => factory(User::class)->create()
+            'user_id' => $user->id,
         ]);
 
         factory(Report::class, 10)->make(['user_id' => factory(User::class)->create()])
@@ -69,8 +79,11 @@ class PostTest extends TestCase
 
     public function test_files_relation()
     {
+        $user =  factory(User::class)->create();
+
         $post = factory(Post::class)->create([
-            'user_id' => factory(User::class)->create()
+            'id' => $user->id,
+            'user_id' => $user->id
         ]);
 
         $post->files()->save(factory(File::class)->make());
