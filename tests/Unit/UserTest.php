@@ -2,6 +2,7 @@
 
 namespace Tests\Unit;
 
+use App\Advice;
 use App\Comment;
 use App\Cost;
 use App\Feedback;
@@ -14,6 +15,7 @@ use App\User;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Laravel\Passport\Passport;
 use Tests\TestCase;
 
 class UserTest extends TestCase
@@ -165,12 +167,27 @@ class UserTest extends TestCase
     {
         $user = factory(User::class)->create();
 
+        Passport::actingAs($user);
+
         factory(Cost::class)->create([
             'name' => $this->faker->randomElement(['Odontología', 'Ingeniería']),
             'modified_by' => $user->id,
         ]);
 
         $this->assertNotEmpty($user->modified_costs);
+    }
+
+    public function test_modified_advice_relation()
+    {
+        $user = factory(User::class)->create();
+
+        Passport::actingAs($user);
+
+        factory(Advice::class)->create([
+            'modified_by' => $user->id,
+        ]);
+
+        $this->assertNotEmpty($user->modified_advices);
     }
 
     /*----------------------------------------------*/
