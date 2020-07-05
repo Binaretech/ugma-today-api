@@ -19,7 +19,7 @@ class CreateAdviceTable extends Migration
             $table->string('title', 128);
             $table->string('content', 500);
             $table->dateTime('show_at')->nullable();
-            $table->dateTime('expire_date')->nullable();
+            $table->dateTime('expire_at')->nullable();
 
             $table->foreign('modified_by')
                 ->references('id')
