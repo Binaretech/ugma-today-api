@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateCostsTable extends Migration
+class CreateAdviceTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,13 @@ class CreateCostsTable extends Migration
      */
     public function up()
     {
-        Schema::create('costs', function (Blueprint $table) {
-            $table->smallIncrements('id');
+        Schema::create('advice', function (Blueprint $table) {
+            $table->increments('id');
             $table->unsignedBigInteger('modified_by');
-            $table->string('name', 128);
-            $table->string('comment', 128)->nullable();
-            $table->string('price', 19);
-            $table->tinyInteger('currency');
+            $table->string('title', 128);
+            $table->string('content', 500);
+            $table->dateTime('show_at')->nullable();
+            $table->dateTime('expire_date')->nullable();
 
             $table->foreign('modified_by')
                 ->references('id')
@@ -36,6 +36,6 @@ class CreateCostsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('costs');
+        Schema::dropIfExists('advice');
     }
 }

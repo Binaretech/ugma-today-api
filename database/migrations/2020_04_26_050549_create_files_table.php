@@ -15,9 +15,10 @@ class CreateFilesTable extends Migration
     {
         Schema::create('files', function (Blueprint $table) {
             $table->id();
-            $table->morphs('fileable');
+            $table->string('fileable_type', 20);
+            $table->string('fileable_id', 100);
             $table->unsignedTinyInteger('type')->default(0);
-            $table->string('url', 1000);
+            $table->string('url', 500);
             $table->unsignedTinyInteger('mime_type')->default(0);
 
             $table->timestamps();

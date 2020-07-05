@@ -15,9 +15,10 @@ class CreateReportsTable extends Migration
     {
         Schema::create('reports', function (Blueprint $table) {
             $table->id();
-            $table->morphs('reportable');
-            $table->text('reason');
             $table->unsignedBigInteger('user_id');
+            $table->string('reportable_type', 20);
+            $table->string('reportable_id', 100);
+            $table->text('reason');
             $table->timestamps();
 
             $table->foreign('user_id')
