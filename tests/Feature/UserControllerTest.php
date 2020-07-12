@@ -69,7 +69,7 @@ class UserControllerTest extends TestCase
             'email' => $this->faker->email,
             'name' => $this->faker->name,
             'lastname' => $this->faker->lastName
-        ])->assertOk();
+        ])->dump()->assertOk();
     }
 
     public function test_destroy()

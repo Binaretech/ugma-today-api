@@ -3,6 +3,7 @@
 use App\Cost;
 use App\User;
 use Illuminate\Database\Seeder;
+use Laravel\Passport\Passport;
 
 class CostTableSeeder extends Seeder
 {
@@ -26,9 +27,9 @@ class CostTableSeeder extends Seeder
     public function run()
     {
         $this->names->each(function ($name) {
+            Passport::actingAs($this->users->random());
             factory(Cost::class)->create([
                 'name' => $name,
-                'modified_by' => $this->users->random()->id,
             ]);
         });
     }

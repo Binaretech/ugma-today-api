@@ -36,7 +36,7 @@ class AuthController extends Controller
      * @bodyParam name string required User's first name. Example: lorem@gmail.com
      * @bodyParam lastname string required User's last name.
      * @bodyParam email email required User's email.
-     * @bodyParam withTimestamps optional Show records timestamps
+     * @bodyParam withTimestamps boolean optional Show records timestamps
      * @response 201 {
      * "data": {
      *     "id": 73,
@@ -74,9 +74,10 @@ class AuthController extends Controller
      * 
      * @throws Exception on creation failure
      * 
-     * @bodyParam username string required New username in the app.
-     * @bodyParam password string required For authenticate with the app.
-     * @bodyParam withTimestamps optional Show records timestamps
+     * @bodyParam username string optional required without email.
+     * @bodyParam email email optional required without username.
+     * @bodyParam password string optional For authenticate with the app.
+     * @bodyParam withTimestamps boolean optional Show records timestamps
      * @response {
      * "data": {
      *     "id": 73,
@@ -95,7 +96,8 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         $request_data = $request->validate(User::LOGIN_RULES);
-        $user = User::where('username', $request_data['username'])->first();
+
+        $user = User::get_by_username_or_email($request);
 
         if (!password_verify($request_data['password'], $user->password)) {
             throw new AuthenticationException(trans('exception.login'));
@@ -126,7 +128,9 @@ class AuthController extends Controller
             ->first();
 
         $token = base64_encode($user->id . password_hash(time() . rand(-99999, 99999), PASSWORD_DEFAULT) . uniqid());
+
         $expire = Carbon::now()->addHours(2);
+
         $user->password_reset()->save(new PasswordReset([
             'token' => $token,
             'expire_at' => $expire

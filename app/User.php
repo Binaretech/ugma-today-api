@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Http\Request;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Passport\HasApiTokens;
 
@@ -44,7 +45,8 @@ class User extends Authenticatable
     ];
 
     public const LOGIN_RULES = [
-        'username' => 'required|exists:users',
+        'username' => 'required_without:email|exists:users',
+        'email' => 'required_without:username|exists:profiles',
         'password' => 'required|min:6|max:45',
     ];
 
@@ -157,5 +159,21 @@ class User extends Authenticatable
     public function scopeBanned($query)
     {
         return $query->where('status', User::STATUS['BANNED']);
+    }
+
+    /**
+     * Search and return a user by username or email
+     *
+     * @param Request $data
+     * @return User
+     */
+    public static function get_by_username_or_email(Request $request): User
+    {
+        return User::when($request->username, function ($query, $username) {
+            $query->orWhere('users.username', $username);
+        })
+            ->when($request->email, function ($query, $email) {
+                $query->join('profiles', 'users.id', 'profiles.user_id')->orWhere('profiles.email', $email)->select("users.*");
+            })->first();
     }
 }

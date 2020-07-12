@@ -13,18 +13,16 @@ class AuthTest extends TestCase
 
     public function test_register()
     {
-        $response = $this->post('api/register', [
+        $this->post('api/register', [
             'username' => $this->faker->userName,
             'password' => $this->faker->password,
             'name' => $this->faker->name,
             'lastname' => $this->faker->lastName,
             'email' => $this->faker->safeEmail,
-        ]);
-
-        $response->assertCreated();
+        ])->assertCreated();
     }
 
-    public function test_login()
+    public function test_login_with_username()
     {
         $register = [
             'username' => $this->faker->userName,
@@ -34,10 +32,28 @@ class AuthTest extends TestCase
             'email' => $this->faker->safeEmail,
         ];
 
-        $this->post('api/register', $register);
+        $this->post('api/register', $register)->assertCreated();
 
         $this->post('api/login', [
             'username' => $register['username'],
+            'password' => $register['password'],
+        ])->assertOk();
+    }
+
+    public function test_login_with_email()
+    {
+        $register = [
+            'username' => $this->faker->username,
+            'password' => $this->faker->password,
+            'name' => $this->faker->name,
+            'lastname' => $this->faker->lastName,
+            'email' => $this->faker->safeEmail,
+        ];
+
+        $this->post('api/register', $register)->assertCreated();
+
+        $this->post('api/login', [
+            'email' => $register['email'],
             'password' => $register['password'],
         ])->assertOk();
     }
