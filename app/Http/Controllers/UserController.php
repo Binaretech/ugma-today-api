@@ -21,7 +21,7 @@ class UserController extends Controller
 
     public function __construct()
     {
-        $this->middleware('scope:ADMIN')->only(['index', 'ban', 'active']);
+        $this->middleware('scope:admin')->only(['index', 'ban', 'active']);
     }
 
     /**

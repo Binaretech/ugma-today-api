@@ -23,10 +23,10 @@ class User extends Authenticatable
     ];
 
     public const TYPES = [
-        0 => 'USER',
-        1 => 'ADMIN',
-        'USER' => 0,
-        'ADMIN' => 1,
+        0 => 'user',
+        1 => 'admin',
+        'user' => 0,
+        'admin' => 1,
     ];
 
     public const STATUS = [
@@ -41,7 +41,7 @@ class User extends Authenticatable
         'password' => 'required|min:6|max:45',
         'name' => 'required|min:2|max:50',
         'lastname' => 'required|min:2|max:50',
-        'email' => 'required|unique:profiles|email:rfc,dns'
+        'email' => 'required|unique:profiles|email:rfc'
     ];
 
     public const LOGIN_RULES = [
@@ -66,7 +66,7 @@ class User extends Authenticatable
         'password' => 'sometimes|min:6|max:45',
         'name' => 'sometimes|min:2|max:50',
         'lastname' => 'sometimes|min:2|max:50',
-        'email' => 'sometimes|unique:profiles|email:rfc,dns'
+        'email' => 'sometimes|unique:profiles|email:rfc'
     ];
 
     public static function reset_rules()
@@ -128,12 +128,12 @@ class User extends Authenticatable
 
     public function modified_costs()
     {
-        return $this->hasMany(Cost::class, 'modified_by');
+        return $this->hasMany(Cost::class, 'modifier_user_id');
     }
 
     public function modified_advices()
     {
-        return $this->hasMany(Advice::class, 'modified_by');
+        return $this->hasMany(Advice::class, 'modifier_user_id');
     }
 
     public function setPasswordAttribute($value)
@@ -143,12 +143,12 @@ class User extends Authenticatable
 
     public function scopeUser($query)
     {
-        return $query->where('type', User::TYPES['USER']);
+        return $query->where('type', User::TYPES['user']);
     }
 
     public function scopeAdmin($query)
     {
-        return $query->where('type', User::TYPES['ADMIN']);
+        return $query->where('type', User::TYPES['admin']);
     }
 
     public function scopeActive($query)

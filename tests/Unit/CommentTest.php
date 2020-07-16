@@ -85,7 +85,7 @@ class CommentTest extends TestCase
         $this->assertCount(1, $comment->likes);
     }
 
-    public function test_answer_to_and_replies_relations()
+    public function test_replies_and_reply_relations()
     {
         $post = factory(Post::class)->create([
             'user_id' => factory(User::class)->create()
@@ -107,5 +107,6 @@ class CommentTest extends TestCase
             ->save($replyComment);
 
         $this->assertNotEmpty($comment->replies);
+        $this->assertNotNull($replyComment->reply);
     }
 }

@@ -171,7 +171,7 @@ class UserTest extends TestCase
 
         factory(Cost::class)->create([
             'name' => $this->faker->randomElement(['Odontología', 'Ingeniería']),
-            'modified_by' => $user->id,
+            'modifier_user_id' => $user->id,
         ]);
 
         $this->assertNotEmpty($user->modified_costs);
@@ -184,7 +184,7 @@ class UserTest extends TestCase
         Passport::actingAs($user);
 
         factory(Advice::class)->create([
-            'modified_by' => $user->id,
+            'modifier_user_id' => $user->id,
         ]);
 
         $this->assertNotEmpty($user->modified_advices);
@@ -233,11 +233,11 @@ class UserTest extends TestCase
         ])->create();
 
         User::admin()->get()->each(function (User $user) {
-            $this->assertEquals(User::TYPES['ADMIN'], $user->type);
+            $this->assertEquals(User::TYPES['admin'], $user->type);
         });
 
         User::user()->get()->each(function (User $user) {
-            $this->assertEquals(User::TYPES['USER'], $user->type);
+            $this->assertEquals(User::TYPES['user'], $user->type);
         });
 
         User::active()->get()->each(function (User $user) {

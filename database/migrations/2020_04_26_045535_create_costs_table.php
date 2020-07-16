@@ -15,13 +15,13 @@ class CreateCostsTable extends Migration
     {
         Schema::create('costs', function (Blueprint $table) {
             $table->smallIncrements('id');
-            $table->unsignedBigInteger('modified_by');
-            $table->string('name', 128);
+            $table->unsignedBigInteger('modifier_user_id');
+            $table->string('name', 128)->unique();
             $table->string('comment', 128)->nullable();
             $table->string('price', 19);
             $table->tinyInteger('currency');
 
-            $table->foreign('modified_by')
+            $table->foreign('modifier_user_id')
                 ->references('id')
                 ->on('users');
 

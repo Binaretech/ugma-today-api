@@ -26,13 +26,13 @@ class Comment extends Model
         return $this->morphMany(Like::class, 'likeable');
     }
 
-    public function answer_to()
+    public function reply()
     {
-        return $this->belongsTo(Comment::class, 'answer_to');
+        return $this->belongsTo(Comment::class, 'reply_to_id');
     }
 
     public function replies()
     {
-        return $this->hasMany(Comment::class, 'answer_to');
+        return $this->hasMany(Comment::class, 'reply_to_id');
     }
 }

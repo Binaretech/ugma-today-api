@@ -15,13 +15,13 @@ class CreateAdviceTable extends Migration
     {
         Schema::create('advice', function (Blueprint $table) {
             $table->increments('id');
-            $table->unsignedBigInteger('modified_by');
+            $table->unsignedBigInteger('modifier_user_id');
             $table->string('title', 128);
             $table->string('content', 500);
             $table->dateTime('show_at')->nullable();
             $table->dateTime('expire_at')->nullable();
 
-            $table->foreign('modified_by')
+            $table->foreign('modifier_user_id')
                 ->references('id')
                 ->on('users');
 

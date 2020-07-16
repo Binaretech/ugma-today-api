@@ -28,3 +28,16 @@ Route::middleware('auth:api')->group(function () {
 
     Route::apiResource('user', 'UserController')->except(['store', 'update', 'delete']);
 });
+
+Route::apiResources([
+    'cost' => 'CostController'
+]);
+
+
+Route::prefix('admin')->middleware(['auth:api', 'scope:admin'])->group(function () {
+    //------------------------------------------//
+    //-----------------COSTS--------------------//
+    //------------------------------------------//
+
+    Route::get('cost', 'CostController@index_admin');
+});

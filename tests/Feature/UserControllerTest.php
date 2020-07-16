@@ -16,7 +16,7 @@ class UserControllerTest extends TestCase
     {
         factory(User::class, 10)->create();
 
-        Passport::actingAs(factory(User::class)->create(), ['ADMIN']);
+        Passport::actingAs(factory(User::class)->create(), ['admin']);
         $this->get('api/user')->assertOk()->assertJsonStructure(['data', 'links', 'meta']);
     }
 
@@ -40,7 +40,7 @@ class UserControllerTest extends TestCase
 
     public function test_ban()
     {
-        $admin = factory(User::class)->create(['type' => User::TYPES['ADMIN']]);
+        $admin = factory(User::class)->create(['type' => User::TYPES['admin']]);
         $user = factory(User::class)->create();
 
         Passport::actingAs($admin, [User::TYPES[$admin->type]]);
@@ -50,7 +50,7 @@ class UserControllerTest extends TestCase
 
     public function test_active()
     {
-        $admin = factory(User::class)->create(['type' => User::TYPES['ADMIN']]);
+        $admin = factory(User::class)->create(['type' => User::TYPES['admin']]);
         $user = factory(User::class)->create(['status' => User::STATUS['ACTIVE']]);
 
         Passport::actingAs($admin, [User::TYPES[$admin->type]]);

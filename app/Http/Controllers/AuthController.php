@@ -59,7 +59,7 @@ class AuthController extends Controller
         $user = new User();
 
         self::transaction(function () use ($request_data, &$user) {
-            $user = User::create(array_merge($request_data, ['type' => User::TYPES['USER']]));
+            $user = User::create(array_merge($request_data, ['type' => User::TYPES['user']]));
             $user->profile()->save(new Profile($request_data));
         });
 
