@@ -17,7 +17,9 @@ class UserControllerTest extends TestCase
         factory(User::class, 10)->create();
 
         Passport::actingAs(factory(User::class)->create(), ['admin']);
-        $this->get('api/user')->assertOk()->assertJsonStructure(['data', 'links', 'meta']);
+        $this->get('api/admin/user')->assertOk()->assertJsonStructure(['data' => [
+            ['id', 'username', 'status', 'type'],
+        ], 'links', 'meta']);
     }
 
     public function test_show()
@@ -26,7 +28,12 @@ class UserControllerTest extends TestCase
 
         Passport::actingAs($user, [User::TYPES[$user->type]]);
 
-        $this->get('api/user/' . $user->id)->assertOk()->assertJsonStructure(['data']);
+        $this->get('api/user/' . $user->id)->assertOk()->assertJsonStructure(['data' => [
+            'id',
+            'username',
+            'status',
+            'type'
+        ]]);
     }
 
     public function test_show_not_found()
@@ -45,7 +52,7 @@ class UserControllerTest extends TestCase
 
         Passport::actingAs($admin, [User::TYPES[$admin->type]]);
 
-        $this->post('api/ban/user/' . $user->id)->assertOk();
+        $this->post('api/admin/ban/user/' . $user->id)->assertOk();
     }
 
     public function test_active()
@@ -55,7 +62,7 @@ class UserControllerTest extends TestCase
 
         Passport::actingAs($admin, [User::TYPES[$admin->type]]);
 
-        $this->post('api/active/user/' . $user->id)->assertOk();
+        $this->post('api/admin/active/user/' . $user->id)->assertOk();
     }
 
     public function test_update()
@@ -69,7 +76,7 @@ class UserControllerTest extends TestCase
             'email' => $this->faker->email,
             'name' => $this->faker->name,
             'lastname' => $this->faker->lastName
-        ])->dump()->assertOk();
+        ])->assertOk();
     }
 
     public function test_destroy()

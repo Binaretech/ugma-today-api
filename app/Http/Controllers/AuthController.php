@@ -162,11 +162,15 @@ class AuthController extends Controller
     {
         $request_data = $request->validate(User::reset_rules());
 
-        $user = User::join('password_resets', 'password_resets.user_id', 'users.id')
-            ->where('password_resets.token', $request_data['token'])->first();
+        self::transaction(function () use ($request_data) {
+            $password_reset = PasswordReset::where('token', $request_data['token'])->first();
 
-        $user->password = $request_data['password'];
-        $user->save();
+            $user = $password_reset->user;
+            $user->password = $request_data['password'];
+            $user->save();
+
+            $password_reset->delete();
+        });
 
         return response()->json([
             'message' => trans('responses.reset_password'),

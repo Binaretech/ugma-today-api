@@ -3,7 +3,6 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
-use Illuminate\Support\Facades\Auth;
 
 class CostResource extends JsonResource
 {
@@ -17,9 +16,9 @@ class CostResource extends JsonResource
     {
         return [
             "id" => $this->id,
-            $this->mergeWhen(optional(Auth::user())->tokenCan('admin'), [
-                "modified_by" => new UserResource($this->modified_by->load('profile'))
-            ]),
+            "modified_by" => $this->whenLoaded('modified_by', function () {
+                return new UserResource($this->modified_by->load('profile'));
+            }),
             "name" => $this->name,
             "comment" => $this->comment,
             "price" => $this->price,

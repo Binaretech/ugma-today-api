@@ -19,11 +19,6 @@ class UserController extends Controller
 {
     use TransactionTrait;
 
-    public function __construct()
-    {
-        $this->middleware('scope:admin')->only(['index', 'ban', 'active']);
-    }
-
     /**
      * Get users list
      *

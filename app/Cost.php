@@ -7,6 +7,12 @@ use Illuminate\Support\Facades\Auth;
 
 class Cost extends Model
 {
+    protected $fillable = [
+        'name',
+        'currency',
+        'price',
+        'comment'
+    ];
 
     public const CURRENCIES = [
         'Bs' => 0,
@@ -22,11 +28,22 @@ class Cost extends Model
         });
     }
 
+    public const ID_RULE = [
+        'id' => 'required|exists:costs',
+    ];
+
     public const STORE_RULES = [
         'name' => 'required|string|min:1|max:128|unique:costs',
-        'cost' => 'required|numeric|min:1|max:19',
+        'price' => 'required|string|min:1|max:19|regex:/^\d+(.[0-9]{0,2})?$/',
         'currency' => 'required|numeric|min:0|max:1',
-        'comment' => 'required|string|max:128',
+        'comment' => 'sometimes|string|max:128',
+    ];
+
+    public const UPDATE_RULES = [
+        'name' => 'sometimes|string|min:1|max:128|unique:costs',
+        'price' => 'sometimes|string|min:1|max:19|regex:/^\d+(.[0-9]{0,2})?$/',
+        'currency' => 'sometimes|numeric|min:0|max:1',
+        'comment' => 'sometimes|string|max:128',
     ];
 
     public function modified_by()

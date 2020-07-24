@@ -3,11 +3,12 @@
 namespace Tests\Feature;
 
 use App\PasswordReset;
+use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
-class AuthTest extends TestCase
+class AuthControllerTest extends TestCase
 {
     use RefreshDatabase, WithFaker;
 
@@ -19,7 +20,19 @@ class AuthTest extends TestCase
             'name' => $this->faker->name,
             'lastname' => $this->faker->lastName,
             'email' => $this->faker->safeEmail,
-        ])->assertCreated();
+        ])->assertCreated()->assertJsonStructure([
+            'data' => [
+                'id',
+                'username',
+                'type',
+                'profile' => [
+                    'name',
+                    'lastname',
+                    'email'
+                ],
+                'token'
+            ]
+        ]);
     }
 
     public function test_login_with_username()
@@ -37,7 +50,19 @@ class AuthTest extends TestCase
         $this->post('api/login', [
             'username' => $register['username'],
             'password' => $register['password'],
-        ])->assertOk();
+        ])->assertOk()->assertJsonStructure([
+            'data' => [
+                'id',
+                'username',
+                'type',
+                'profile' => [
+                    'name',
+                    'lastname',
+                    'email'
+                ],
+                'token'
+            ]
+        ]);
     }
 
     public function test_login_with_email()
@@ -55,7 +80,19 @@ class AuthTest extends TestCase
         $this->post('api/login', [
             'email' => $register['email'],
             'password' => $register['password'],
-        ])->assertOk();
+        ])->assertOk()->assertJsonStructure([
+            'data' => [
+                'id',
+                'username',
+                'type',
+                'profile' => [
+                    'name',
+                    'lastname',
+                    'email'
+                ],
+                'token'
+            ]
+        ]);
     }
 
     public function test_fail_login()
@@ -93,11 +130,26 @@ class AuthTest extends TestCase
 
     public function test_reset_password()
     {
-        $password_reset = factory(PasswordReset::class)->create();
+        $password_reset = factory(PasswordReset::class)->create([
+            'expire_at' => Carbon::now()->addHour(2),
+        ]);
 
         $this->post('api/resetPassword', [
             'token' => $password_reset->token,
             'password' => $this->faker->password
         ])->assertOk();
+    }
+
+    public function test_expired_reset_password()
+    {
+
+        $password_reset = factory(PasswordReset::class)->create([
+            'expire_at' => Carbon::yesterday(),
+        ]);
+
+        $this->post('api/resetPassword', [
+            'token' => $password_reset->token,
+            'password' => $this->faker->password
+        ])->assertStatus(422);
     }
 }

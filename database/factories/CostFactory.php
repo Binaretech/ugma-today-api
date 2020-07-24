@@ -7,6 +7,7 @@ use Faker\Generator as Faker;
 
 $factory->define(Cost::class, function (Faker $faker) {
     return [
+        'name' => $faker->name,
         'price' => $faker->randomFloat(2),
         'comment' => $faker->boolean() ? $faker->realText(128) : null,
         'currency' => $faker->randomElement([0, 1])

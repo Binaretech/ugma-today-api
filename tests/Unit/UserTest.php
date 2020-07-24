@@ -191,16 +191,6 @@ class UserTest extends TestCase
     }
 
     /*----------------------------------------------*/
-    /*                TEST RULES                */
-    /*----------------------------------------------*/
-
-    public function test_reset_rules()
-    {
-        $rules = User::reset_rules();
-        $this->assertNotEmpty($rules);
-    }
-
-    /*----------------------------------------------*/
     /*          TEST ACCESSORS/MUTATORS             */
     /*----------------------------------------------*/
 

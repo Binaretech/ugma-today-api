@@ -18,6 +18,10 @@ class User extends Authenticatable
         'username', 'password', 'type'
     ];
 
+    protected $appends = [
+        'profile'
+    ];
+
     protected $hidden = [
         'password',
     ];
@@ -73,8 +77,8 @@ class User extends Authenticatable
     {
         return [
             'token' => ['required', 'exists:password_resets', function ($attribute, $value, $fail) {
-                if (optional(PasswordReset::where('token', $value)->first())->expire_at < Carbon::now()) {
-                    $fail(trans('validation.expired', ['attribute' => $attribute]));
+                if (Carbon::now() > optional(PasswordReset::where('token', $value)->first())->expire_at) {
+                    $fail(trans('validation.expired'));
                 }
             }],
             'password' => ['required', 'min:6', 'max:45']
