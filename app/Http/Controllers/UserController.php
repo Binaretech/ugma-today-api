@@ -59,18 +59,18 @@ class UserController extends Controller
      * 
      * @urlParam user required User by id. Example: 2
      * @response {
-        "data": {
-            "id": null,
-            "username": "era.hickle",
-            "status": 0,
-            "type": 0,
-            "profile": {
-                "name": "Jaeden Padberg",
-                "lastname": "West",
-                "email": "lia.oconnell@example.net"
-                }
-            }
-        }
+     *   "data": {
+     *       "id": null,
+     *       "username": "era.hickle",
+     *       "status": 0,
+     *       "type": 0,
+     *       "profile": {
+     *           "name": "Jaeden Padberg",
+     *           "lastname": "West",
+     *           "email": "lia.oconnell@example.net"
+     *           }
+     *       }
+     *   }
      */
     public function show(User $user)
     {
@@ -103,6 +103,8 @@ class UserController extends Controller
             $user->update($request_data);
             $user->profile->update($request_data);
         });
+
+        return response()->json(['message' => trans('responses.success')]);
     }
 
     /**
@@ -148,7 +150,6 @@ class UserController extends Controller
     /**
      * Remove the specified user.
      *
-     * @param  int  $id
      * @return \Illuminate\Http\Response
      * @urlParam user required User by id. Example: 2
      * 
@@ -158,7 +159,10 @@ class UserController extends Controller
      */
     public function destroy(Request $request)
     {
-        $request->user()->delete();
+        if (!$request->user()->delete()) {
+            return response()->json(['message' => trans('responses.UserController.destroy')]);
+        }
+
         return response()->json(['message' => trans('responses.success')]);
     }
 }

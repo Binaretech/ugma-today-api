@@ -2,10 +2,12 @@
 
 namespace Tests\Feature;
 
+use App\Mail\PasswordResetMail;
 use App\PasswordReset;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Support\Facades\Mail;
 use Tests\TestCase;
 
 class AuthControllerTest extends TestCase
@@ -115,6 +117,8 @@ class AuthControllerTest extends TestCase
 
     public function test_password_reset_email()
     {
+        Mail::fake();
+
         $register = [
             'username' => $this->faker->userName,
             'password' => $this->faker->password,
@@ -126,6 +130,8 @@ class AuthControllerTest extends TestCase
         $this->post('api/register', $register)->assertCreated();
 
         $this->json('POST', 'api/passwordReset', ['email' => $register['email']])->assertOk();
+
+        Mail::assertQueued(PasswordResetMail::class);
     }
 
     public function test_reset_password()
