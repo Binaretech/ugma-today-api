@@ -1,6 +1,6 @@
 # UgmaToday Api
 
-[![Build Status](https://github.com/ugma-today/ugma-today-api/workflows/Laravel/badge.svg)](https://github.com/ugma-today/ugma-today-api/actions)
+[![Build Status](https://github.com/Binaretech/ugma-today-api/workflows/Laravel/badge.svg)](https://github.com/Binaretech/ugma-today-api/actions)
 [![pipeline status](https://gitlab.com/ugma-today/ugma-today-api/badges/master/pipeline.svg)](https://gitlab.com/ugma-today/ugma-today-api/-/commits/master)
 [![coverage report](https://gitlab.com/ugma-today/ugma-today-api/badges/master/coverage.svg)](https://gitlab.com/ugma-today/ugma-today-api/-/commits/master)
 
