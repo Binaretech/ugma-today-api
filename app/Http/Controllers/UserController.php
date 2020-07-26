@@ -103,6 +103,8 @@ class UserController extends Controller
             $user->update($request_data);
             $user->profile->update($request_data);
         });
+
+        return response()->json(['message' => trans('responses.success')]);
     }
 
     /**
