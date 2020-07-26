@@ -21,7 +21,8 @@ class DatabaseSeeder extends Seeder
             CostTableSeeder::class,
             AdviceSeeder::class
         ]);
-        $time = $time->diffForHumans(Carbon::now());
+
+        $time = Carbon::now()->diffForHumans($time);
 
         echo "\nTime since seeders started: $time\n\n";
     }
