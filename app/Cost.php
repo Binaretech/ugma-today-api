@@ -23,7 +23,7 @@ class Cost extends Model
 
     protected static function booted()
     {
-        static::creating(function (Cost $cost) {
+        static::saving(function (Cost $cost) {
             $cost->modifier_user_id = Auth::user()->id;
         });
     }
