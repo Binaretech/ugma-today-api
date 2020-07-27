@@ -10,7 +10,7 @@ class Advice extends Model
 
     protected static function booted()
     {
-        static::creating(function (Advice $advice) {
+        static::saving(function (Advice $advice) {
             $advice->modifier_user_id = Auth::user()->id;
         });
     }
