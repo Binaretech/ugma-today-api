@@ -33,12 +33,12 @@ class UserController extends Controller
         $request->validate(User::FILTER_RULES);
 
         $query = User::when(
-            $request->has(['with_deleted', 'deleted_only']),
+            $request->has(['withDeleted', 'deletedOnly']),
             function ($query) {
                 return $query->withTrashed();
             }
         )
-            ->when($request->has('deleted_only'), function ($query) {
+            ->when($request->has('deletedOnly'), function ($query) {
                 return $query->whereNotNull('deleted_at');
             })
             ->when($request->has('status'), function ($query) use ($request) {
