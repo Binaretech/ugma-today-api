@@ -22,8 +22,8 @@ class AuthResource extends JsonResource
             'type' => $this->type,
             'profile' => new ProfileResource($this->profile),
             $this->mergeWhen($request->get('withTimestamps') === true, [
-                'created_at' => $this->created_at,
-                'updated_at' => $this->updated_at,
+                'createdAt' => $this->created_at,
+                'updatedAt' => $this->updated_at,
             ]),
             'token' => $this->createToken(
                 'UgmaToday Access Token',
