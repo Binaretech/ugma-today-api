@@ -43,7 +43,7 @@ class CostControllerTest extends TestCase
             ->assertJsonStructure(['data' => [
                 [
                     'id',
-                    'modified_by' => [
+                    'modifiedBy' => [
                         'id',
                         'username',
                         'status',
@@ -114,7 +114,7 @@ class CostControllerTest extends TestCase
                 'data' => [
                     'id',
                     'name',
-                    'modified_by' => [
+                    'modifiedBy' => [
                         'id',
                         'username',
                         'status',
