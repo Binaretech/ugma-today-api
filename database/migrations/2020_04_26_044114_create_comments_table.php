@@ -28,6 +28,13 @@ class CreateCommentsTable extends Migration
             $table->foreign('post_id')
                 ->references('id')
                 ->on('posts');
+
+        });
+
+        Schema::table('comments', function(Blueprint $table) {
+            $table->foreign('reply_to_id')
+                ->references('id')
+                ->on('comments'); 
         });
     }
 
