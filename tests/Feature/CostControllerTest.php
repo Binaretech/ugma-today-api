@@ -43,7 +43,7 @@ class CostControllerTest extends TestCase
             ->assertJsonStructure(['data' => [
                 [
                     'id',
-                    'modified_by' => [
+                    'modifiedBy' => [
                         'id',
                         'username',
                         'status',
@@ -70,23 +70,93 @@ class CostControllerTest extends TestCase
             ->assertForbidden();
     }
 
-    public function test_store_cost()
+    public function test_store()
     {
         Passport::actingAs(factory(User::class)->create(), ['admin']);
 
-        $response = $this->post('api/admin/cost', [
+        $this->post('api/admin/cost', [
             'name' => $this->faker->name,
             'price' => (string) $this->faker->numberBetween(1, 99999999999999),
             'currency' => $this->faker->numberBetween(0, 1),
             'comment' => $this->faker->realText(128),
         ])->assertCreated()->assertJsonStructure([
-            'data' => [
-                'id',
-                'name',
-                'comment',
-                'price',
-                'currency'
-            ]
+            'message'
         ]);
+    }
+
+    public function test_show()
+    {
+
+        $cost = factory(Cost::class)->state('user')->create();
+        $this->get('api/cost/' . $cost->id)
+            ->assertOk()->assertJsonStructure([
+                'data' => [
+                    'id',
+                    'name',
+                    'comment',
+                    'price',
+                    'currency',
+                ]
+            ]);
+    }
+
+    public function test_show_admin()
+    {
+        $cost = factory(Cost::class)->state('user')->create();
+
+        Passport::actingAs(
+            factory(User::class)->create(['type' => User::TYPES['admin']]),
+            ['admin']
+        );
+
+        $this->get('api/admin/cost/' . $cost->id)
+            ->assertOk()->assertJsonStructure([
+                'data' => [
+                    'id',
+                    'name',
+                    'modifiedBy' => [
+                        'id',
+                        'username',
+                        'status',
+                        'type',
+                        'profile' => [
+                            'name',
+                            'lastname',
+                            'email'
+                        ],
+                    ],
+                    'comment',
+                    'price',
+                    'currency',
+                ]
+            ]);
+    }
+
+    public function test_update()
+    {
+        $cost = factory(Cost::class)->state('user')->create();
+
+        Passport::actingAs(
+            factory(User::class)->create(['type' => User::TYPES['admin']]),
+            ['admin']
+        );
+
+        $this->put('api/admin/cost/' . $cost->id, [
+            'name' => $this->faker->name,
+        ])->assertOk()->assertJsonStructure(['message']);
+    }
+
+    public function test_destroy()
+    {
+        $cost = factory(Cost::class)->state('user')->create();
+
+        Passport::actingAs(
+            factory(User::class)->create(['type' => User::TYPES['admin']]),
+            ['admin']
+        );
+
+        $this->delete('api/admin/cost/' . $cost->id)->assertOk()->assertJsonStructure(['message']);
+
+        $this->assertDatabaseMissing('costs', $cost->toArray());
     }
 }

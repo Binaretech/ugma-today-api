@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use App\Cost;
 
 class CostResource extends JsonResource
 {
@@ -16,16 +17,17 @@ class CostResource extends JsonResource
     {
         return [
             "id" => $this->id,
-            "modified_by" => $this->whenLoaded('modified_by', function () {
+            "modifiedBy" => $this->whenLoaded('modified_by', function () {
                 return new UserResource($this->modified_by->load('profile'));
             }),
             "name" => $this->name,
             "comment" => $this->comment,
             "price" => $this->price,
             "currency" => $this->currency,
+            "currencyName" => Cost::CURRENCIES[$this->currency],
             $this->mergeWhen($request->get('withTimestamps') === true, [
-                'created_at' => $this->created_at,
-                'updated_at' => $this->updated_at,
+                'createdAt' => $this->created_at,
+                'updatedAt' => $this->updated_at,
             ])
         ];
     }

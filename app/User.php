@@ -61,8 +61,8 @@ class User extends Authenticatable
     public const FILTER_RULES = [
         'type' => 'sometimes|required|numeric|between:0,1',
         'status' => 'sometimes|required|numeric|between:0,1',
-        'with_deleted' => 'sometimes|boolean',
-        'deleted_only' => 'sometimes|boolean',
+        'withDeleted' => 'sometimes|boolean',
+        'deletedOnly' => 'sometimes|boolean',
     ];
 
     public const UPDATE_RULES = [

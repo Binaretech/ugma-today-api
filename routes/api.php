@@ -30,13 +30,19 @@ Route::apiResource('cost', 'CostController')->only(['index', 'show']);
 
 
 Route::prefix('admin')->middleware(['auth:api', 'scope:admin'])->group(function () {
+
+    Route::apiResource('user', 'UserController')->except(['store', 'update', 'delete']);
+
+    Route::post('ban/user/{user}', 'UserController@ban');
+
+    Route::post('active/user/{user}', 'UserController@active');
+
     //------------------------------------------//
     //-----------------COSTS--------------------//
     //------------------------------------------//
-
-    Route::apiResource('user', 'UserController')->except(['store', 'update', 'delete']);
-    Route::post('ban/user/{user}', 'UserController@ban');
-    Route::post('active/user/{user}', 'UserController@active');
     Route::get('cost', 'CostController@index_admin');
-    Route::apiResource('cost', 'CostController')->except(['index', 'show']);
+    Route::get('cost/{cost}', 'CostController@show_admin');
+    Route::post('cost', 'CostController@store');
+    Route::put('cost/{cost}', 'CostController@update');
+    Route::delete('cost/{cost}', 'CostController@destroy');
 });
