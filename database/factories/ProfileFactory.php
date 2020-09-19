@@ -1,14 +1,21 @@
 <?php
 
-/** @var \Illuminate\Database\Eloquent\Factory $factory */
+namespace Database\Factories;
 
-use App\Profile;
-use Faker\Generator as Faker;
+use Illuminate\Database\Eloquent\Factories\Factory;
+use App\Models\Profile;
 
-$factory->define(Profile::class, function (Faker $faker) {
-    return [
-        'name' => $faker->name,
-        'lastname' => $faker->lastName,
-        'email' => $faker->unique()->safeEmail,
-    ];
-});
+class ProfileFactory extends Factory
+{
+    protected $model = Profile::class;
+
+    public function definition()
+    {
+        return [
+            'name' => $this->faker->name,
+            'lastname' => $this->faker->lastName,
+            'email' => $this->faker->unique()->safeEmail,
+        ];
+    }
+}
+    

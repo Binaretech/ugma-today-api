@@ -1,15 +1,21 @@
 <?php
 
-/** @var \Illuminate\Database\Eloquent\Factory $factory */
+namespace Database\Factories;
 
-use App\Advice;
-use Faker\Generator as Faker;
+use App\Models\Advice;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
-$factory->define(Advice::class, function (Faker $faker) {
-    return [
-        'title' => $faker->realText(128),
-        'content' => $faker->realText(500),
-        'show_at' => $faker->boolean() ? $faker->dateTime() : null,
-        'expire_at' => $faker->boolean() ? $faker->dateTime() : null,
-    ];
-});
+class AdviceFactory extends Factory
+{
+    protected $model = Advice::class;
+
+    public function definition()
+    {
+         return [
+            'title' => $this->faker->realText(128),
+            'content' => $this->faker->realText(500),
+            'show_at' => $this->faker->boolean() ? $this->faker->dateTime() : null,
+            'expire_at' => $this->faker->boolean() ? $this->faker->dateTime() : null,
+        ];
+    }
+}

@@ -1,12 +1,20 @@
 <?php
 
-/** @var \Illuminate\Database\Eloquent\Factory $factory */
+namespace Database\Factories;
 
-use App\Report;
-use Faker\Generator as Faker;
+use Illuminate\Database\Eloquent\Factories\Factory;
+use App\Models\Report;
 
-$factory->define(Report::class, function (Faker $faker) {
-    return [
-        'reason' => $faker->realText()
-    ];
-});
+class ReportFactory extends Factory
+{
+    protected $model = Report::class;
+
+    public function definition()
+    {
+        return [
+            'reason' => $this->faker->realText()
+        ];
+    }
+}
+
+    

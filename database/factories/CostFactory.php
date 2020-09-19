@@ -1,21 +1,32 @@
 <?php
 
-/** @var \Illuminate\Database\Eloquent\Factory $factory */
+namespace Database\Factories;
 
-use App\Cost;
-use App\User;
-use Faker\Generator as Faker;
+use App\Models\{
+    Cost,
+    User,
+};
+use Illuminate\Database\Eloquent\Factories\Factory;
 use Laravel\Passport\Passport;
 
-$factory->define(Cost::class, function (Faker $faker) {
-    return [
-        'name' => $faker->name,
-        'price' => $faker->randomFloat(2),
-        'comment' => $faker->boolean() ? $faker->realText(128) : null,
-        'currency' => $faker->randomElement([0, 1])
-    ];
-});
+class CostFactory extends Factory
+{
+    protected $model = Cost::class;
 
-$factory->afterMakingState(Cost::class, 'user', function (Cost $cost, $faker) {
-    Passport::actingAs(factory(User::class)->create());
-});
+    public function definition()
+    {
+        return [
+            'name' => $this->faker->name,
+            'price' => $this->faker->randomFloat(2),
+            'comment' => $this->faker->boolean() ? $this->faker->realText(128) : null,
+            'currency' => $this->faker->randomElement([0, 1])
+        ];
+    }
+
+    public function configure()
+    {
+        return $this->afterMakingState(function (Cost $cost) {
+            Passport::actingAs(User::factory()->create());
+        });
+    }
+}

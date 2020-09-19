@@ -1,58 +1,79 @@
 <?php
 
-/** @var \Illuminate\Database\Eloquent\Factory $factory */
 namespace Database\Factories;
 
-use App\Profile;
-use App\User;
-use Faker\Generator as Faker;
+use App\Models\{
+    User,
+    Profile,
+};
+use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 
-/*
-|--------------------------------------------------------------------------
-| Model Factories
-|--------------------------------------------------------------------------
-|
-| This directory should contain each of the model factory definitions for
-| your application. Factories provide a convenient way to generate new
-| model instances for testing / seeding your application's database.
-|
-*/
+class UserFactory extends Factory
+{
+    /**
+     * The name of the factory's corresponding model.
+     *
+     * @var string
+     */
+    protected $model = User::class;
 
-$factory->define(User::class, function (Faker $faker) {
-    return [
-        'username' => $faker->userName,
-        'email_verified_at' => now(),
-        'type' => $faker->randomElement([User::STATUS['ACTIVE'], User::STATUS['BANNED']]),
-        'status' => $faker->numberBetween(0, 1),
-        'password' => 'secret',
-        'remember_token' => Str::random(10),
-    ];
-});
+    /**
+     * Define the model's default state.
+     *
+     * @return array
+     */
+    public function definition()
+    {
+        return [
+            'username' => $this->faker->userName,
+            'email_verified_at' => now(),
+            'type' => $this->faker->randomElement([User::STATUS['ACTIVE'], User::STATUS['BANNED']]),
+            'status' => $this->faker->numberBetween(0, 1),
+            'password' => 'secret',
+            'remember_token' => Str::random(10),
+        ];
+    }
 
-$factory->state(User::class, 'admin', [
-    'type' => User::TYPES['admin'],
-]);
+    public function admin()
+    {
+        return $this->state([
+            'type' => User::TYPES['admin']
+        ]);
+    }
 
-$factory->state(User::class, 'user', [
-    'type' => User::TYPES['user'],
-]);
+    public function user()
+    {
+        return $this->state([
+            'type' => User::TYPES['user']
+        ]);
+    }
 
-$factory->state(User::class, 'active', [
-    'status' => User::STATUS['ACTIVE'],
-]);
+    public function active()
+    {
+        return $this->state([
+            'status' => User::STATUS['ACTIVE']
+        ]);
+    }
 
-$factory->state(User::class, 'banned', [
-    'status' => User::STATUS['BANNED'],
-]);
+    public function banned()
+    {
+        return $this->state([
+            'status' => User::STATUS['BANNED']
+        ]);
+    }
 
-$factory->state(User::class, 'deleted', function (Faker $faker) {
-    return [
-        'deleted_at' => $faker->dateTime
-    ];
-});
+    public function deleted()
+    {
+        return $this->state([
+            'deleted_at' => $this->faker->dateTime
+        ]);
+    }
 
-
-$factory->afterCreating(User::class, function (User $user, $faker) {
-    $user->profile()->save(factory(Profile::class)->make());
-});
+    public function configure()
+    {
+        return $this->afterCreating(function (User $user) {
+            $user->profile()->save(Profile::factory()->make());
+        });
+    }
+}
