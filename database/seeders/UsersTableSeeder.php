@@ -14,38 +14,16 @@ class UsersTableSeeder extends Seeder
      */
     public function run()
     {
-        factory(User::class)->states([
-            'admin',
-            'active',
-        ])->create(['username' =>  'mari_conazo']);
+        User::factory()->create(['username' => 'mari_conazo']);
 
-        factory(User::class, 20)->states([
-            'user',
-            'active',
-        ])->create();
+        User::factory()->times(20)->user()->active()->create();
 
-        factory(User::class, 20)->states([
-            'user',
-            'banned'
-        ])->create();
+        User::factory()->times(20)->user()->banned()->create();
 
-        factory(User::class)->states([
-            'admin',
-            'active',
-            'deleted',
-        ])->create();
+        User::factory()->admin()->active()->deleted()->create();
 
-        factory(User::class, 5)->states([
-            'user',
-            'active',
-            'deleted',
-        ])->create();
+        User::factory()->times(5)->user()->active()->deleted()->create();
 
-        factory(User::class, 5)->states([
-            'user',
-            'banned',
-            'deleted',
-        ])->create();
-        User::factory()->times(1)->create(['username' => 'mari_conazo']);
+        User::factory()->times(5)->user()->banned()->deleted()->create();
     }
 }

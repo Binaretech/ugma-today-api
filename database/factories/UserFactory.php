@@ -85,9 +85,11 @@ class UserFactory extends Factory
      */
     public function deleted()
     {
-        return $this->state([
-            'deleted_at' => $this->faker->dateTime
-        ]);
+        return $this->state(function (array $attributes) {
+            return [
+                'deleted_at' => $this->faker->dateTime
+            ];
+        });
     }
 
     /**
