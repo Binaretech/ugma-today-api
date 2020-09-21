@@ -57,6 +57,11 @@ class Post extends Model
         return $this->morphMany(File::class, 'fileable');
     }
 
+    public function scopeType($query, $type)
+    {
+        return $query->where('type', $type);
+    }
+
     public static function generate_id(int $user_id)
     {
         $count = (optional(Post::selectRaw('COUNT(*) as count')->where('user_id', $user_id)->first())->count ?: 0) + 1;
