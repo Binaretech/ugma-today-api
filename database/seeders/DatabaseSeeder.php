@@ -1,5 +1,7 @@
 <?php
 
+namespace Database\Seeders;
+
 use Illuminate\Database\Seeder;
 use Carbon\Carbon;
 
@@ -16,10 +18,10 @@ class DatabaseSeeder extends Seeder
 
         $this->call([
             UsersTableSeeder::class,
-            PostTableSeeder::class,
-            LikeTableSeeder::class,
-            CostTableSeeder::class,
-            AdviceSeeder::class
+            // PostTableSeeder::class,
+            // LikeTableSeeder::class,
+            // CostTableSeeder::class,
+            // AdviceSeeder::class
         ]);
 
         $time = Carbon::now()->diffForHumans($time);
