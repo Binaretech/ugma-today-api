@@ -11,8 +11,18 @@ use Laravel\Passport\Passport;
 
 class CostFactory extends Factory
 {
+    /**
+     * The name of the factory's corresponding model.
+     *
+     * @var string
+     */
     protected $model = Cost::class;
 
+    /**
+     * Define the model's default state.
+     *
+     * @return array
+     */
     public function definition()
     {
         return [
@@ -23,6 +33,10 @@ class CostFactory extends Factory
         ];
     }
 
+    /**
+     * Factory configurations
+     * @return CostFactory
+     */
     public function configure()
     {
         return $this->afterMakingState(function (Cost $cost) {

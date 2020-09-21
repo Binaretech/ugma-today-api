@@ -35,6 +35,10 @@ class UserFactory extends Factory
         ];
     }
 
+    /**
+     * Set admin user type
+     * @return UserFactory
+     */
     public function admin()
     {
         return $this->state([
@@ -42,6 +46,10 @@ class UserFactory extends Factory
         ]);
     }
 
+    /**
+     * Set regular user type
+     * @return UserFactory
+     */
     public function user()
     {
         return $this->state([
@@ -49,6 +57,10 @@ class UserFactory extends Factory
         ]);
     }
 
+    /**
+     * Set active user status
+     * @return UserFactory
+     */
     public function active()
     {
         return $this->state([
@@ -56,6 +68,10 @@ class UserFactory extends Factory
         ]);
     }
 
+    /**
+     * Set banned user status
+     * @return UserFactory
+     */
     public function banned()
     {
         return $this->state([
@@ -63,6 +79,10 @@ class UserFactory extends Factory
         ]);
     }
 
+    /**
+     * Set deleted user
+     * @return UserFactory
+     */
     public function deleted()
     {
         return $this->state([
@@ -70,6 +90,10 @@ class UserFactory extends Factory
         ]);
     }
 
+    /**
+     * Factory configurations
+     * @return UserFactory
+     */
     public function configure()
     {
         return $this->afterCreating(function (User $user) {
