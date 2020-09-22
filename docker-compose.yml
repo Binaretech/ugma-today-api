@@ -6,8 +6,7 @@ services:
     build: .
     volumes:
       - .:/app
-      - ./.env.example:/app/.env.testing
-      - ./.env.example:/app/.env
+      - ./.env:/app/.env.testing
     working_dir: /app
     depends_on:
       - postgres

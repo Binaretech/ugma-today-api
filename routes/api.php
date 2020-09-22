@@ -21,6 +21,7 @@ use App\Http\Controllers\{
 
 Route::post('register', [AuthController::class, 'register']);
 Route::post('login', [AuthController::class, 'login']);
+Route::post('admin/login', [AuthController::class, 'admin_login']);
 
 Route::post('passwordReset', [AuthController::class, 'password_reset_email']);
 Route::post('resetPassword', [AuthController::class, 'reset_password']);
