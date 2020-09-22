@@ -1,11 +1,13 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Post extends Model
 {
+    use HasFactory;
 
     protected static function booted()
     {
@@ -53,6 +55,11 @@ class Post extends Model
     public function files()
     {
         return $this->morphMany(File::class, 'fileable');
+    }
+
+    public function scopeType($query, $type)
+    {
+        return $query->where('type', $type);
     }
 
     public static function generate_id(int $user_id)

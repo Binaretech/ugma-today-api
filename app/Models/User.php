@@ -1,8 +1,9 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -12,7 +13,7 @@ use Laravel\Passport\HasApiTokens;
 
 class User extends Authenticatable
 {
-    use Notifiable, HasApiTokens, SoftDeletes;
+    use Notifiable, HasApiTokens, SoftDeletes, HasFactory;
 
     protected $fillable = [
         'username', 'password', 'type'
@@ -157,7 +158,7 @@ class User extends Authenticatable
 
     public function scopeActive($query)
     {
-        return $query->where('status', 1);
+        return $query->where('status', User::STATUS['ACTIVE']);
     }
 
     public function scopeBanned($query)

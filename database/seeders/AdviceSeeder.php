@@ -1,6 +1,8 @@
 <?php
 
-use App\{
+namespace Database\Seeders;
+
+use App\Models\{
     Advice,
     User
 };
@@ -21,9 +23,9 @@ class AdviceSeeder extends Seeder
      */
     public function run()
     {
-        $this->users->each(function(User $user) {
+        $this->users->each(function (User $user) {
             Passport::actingAs($user);
-            factory(Advice::class, 20)->create();
+            Advice::factory()->times(20)->create();
         });
     }
 }

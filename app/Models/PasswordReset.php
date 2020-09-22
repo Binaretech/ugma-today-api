@@ -1,16 +1,19 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Profile extends Model
+class PasswordReset extends Model
 {
+    use HasFactory;
+
     protected $primaryKey = 'user_id';
     public $incrementing = false;
 
     protected $fillable = [
-        'name', 'lastname', 'email'
+        'token', 'expire_at'
     ];
 
     public function user()

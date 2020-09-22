@@ -1,13 +1,28 @@
 <?php
 
-/** @var \Illuminate\Database\Eloquent\Factory $factory */
+namespace Database\Factories;
 
-use App\File;
-use App\Model;
-use Faker\Generator as Faker;
+use App\Models\File;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
-$factory->define(File::class, function (Faker $faker) {
-    return [
-        "url" => $faker->url,
-    ];
-});
+class FileFactory extends Factory
+{
+    /**
+     * The name of the factory's corresponding model.
+     *
+     * @var string
+     */
+    protected $model = File::class;
+
+    /**
+     * Define the model's default state.
+     *
+     * @return array
+     */
+    public function definition()
+    {
+        return [
+            "url" => $this->faker->url,
+        ];
+    }
+}

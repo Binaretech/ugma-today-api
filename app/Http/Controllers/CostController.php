@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Cost;
+use App\Models\Cost;
 use App\Exceptions\DatabaseException;
 use App\Http\Resources\CostResource;
 use Illuminate\Http\Request;

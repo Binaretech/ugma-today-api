@@ -1,7 +1,9 @@
 <?php
 
+namespace Database\Seeders;
+
 use Illuminate\Database\Seeder;
-use App\{
+use App\Models\{
     User,
     Post,
     Comment,
@@ -11,7 +13,7 @@ class PostTableSeeder extends Seeder
 {
     public function __construct()
     {
-        $this->users = User::where('status', User::STATUS['ACTIVE'])->get();
+        $this->users = User::active()->get();
     }
     /**
      * Run the database seeds.
@@ -22,7 +24,7 @@ class PostTableSeeder extends Seeder
     {
         $this->users->random(10)->each(function (User $user) {
             $posts_quantity = rand(1, 3);
-            factory(Post::class, $posts_quantity)->make([
+            Post::factory()->times($posts_quantity)->make([
                 'type' => rand(0, 1)
             ])->each(function (Post $post) use ($user) {
                 $post->id = Post::generate_id($user->id);
@@ -31,12 +33,12 @@ class PostTableSeeder extends Seeder
         });
 
         $this->users->each(function (User $user) {
-            $posts = Post::where('type', Post::TYPES['PUBLISHED']);
+            $posts = Post::type(Post::TYPES['PUBLISHED']);
             $posts->get()
                 ->each(function (Post $post) use ($user) {
                     $comments_quantity = rand(1, 3);
                     $post->comments()->saveMany(
-                        factory(Comment::class, $comments_quantity)->make([
+                        Comment::factory()->times($comments_quantity)->make([
                             'user_id' => $user->id
                         ])
                     );
@@ -48,8 +50,8 @@ class PostTableSeeder extends Seeder
             $other_comment = Comment::where('post_id', $comment->post_id)
                 ->where('id', '<>', $comment->id)
                 ->first();
-            if($other_comment) {
-                $comment->reply_to_id = $other_comment->id; 
+            if ($other_comment) {
+                $comment->reply_to_id = $other_comment->id;
                 $comment->save();
             }
         });

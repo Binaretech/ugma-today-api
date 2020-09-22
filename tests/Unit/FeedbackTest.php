@@ -2,8 +2,8 @@
 
 namespace Tests\Unit;
 
-use App\Feedback;
-use App\User;
+use App\Models\Feedback;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -13,8 +13,8 @@ class FeedbackTest extends TestCase
 
     public function test_user_relation()
     {
-        $report = factory(Feedback::class)->create([
-            'user_id' => factory(User::class)->create(),
+        $report = Feedback::factory()->create([
+            'user_id' => User::factory()->active()->create(),
         ]);
 
         $this->assertNotNull($report->user);

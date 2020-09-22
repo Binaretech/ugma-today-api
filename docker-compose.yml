@@ -1,16 +1,17 @@
 version: "3"
 
-services: 
+services:
   api:
     image: registry.gitlab.com/ugma-today/ugma-today-api/dev
     build: .
     volumes:
       - .:/app
-      - ./.env.testing:/app/.env
+      - ./.env.example:/app/.env.testing
+      - ./.env.example:/app/.env
     working_dir: /app
-    depends_on: 
+    depends_on:
       - postgres
-    ports: 
+    ports:
       - 80:80
 
   postgres:
@@ -26,7 +27,7 @@ services:
 
   mailhog:
     image: mailhog/mailhog
-    ports: 
+    ports:
       - 8025:8025
       - 1025:1025
 

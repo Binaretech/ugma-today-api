@@ -3,7 +3,7 @@
 namespace Tests\Feature;
 
 use App\Mail\PasswordResetMail;
-use App\PasswordReset;
+use App\Models\PasswordReset;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -136,7 +136,7 @@ class AuthControllerTest extends TestCase
 
     public function test_reset_password()
     {
-        $password_reset = factory(PasswordReset::class)->create([
+        $password_reset = PasswordReset::factory()->create([
             'expire_at' => Carbon::now()->addHour(2),
         ]);
 
@@ -149,7 +149,7 @@ class AuthControllerTest extends TestCase
     public function test_expired_reset_password()
     {
 
-        $password_reset = factory(PasswordReset::class)->create([
+        $password_reset = PasswordReset::factory()->create([
             'expire_at' => Carbon::yesterday(),
         ]);
 

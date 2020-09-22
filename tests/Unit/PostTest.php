@@ -2,12 +2,12 @@
 
 namespace Tests\Unit;
 
-use App\Comment;
-use App\File;
-use App\Like;
-use App\Post;
-use App\Report;
-use App\User;
+use App\Models\Comment;
+use App\Models\File;
+use App\Models\Like;
+use App\Models\Post;
+use App\Models\Report;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -17,10 +17,10 @@ class PostTest extends TestCase
 
     public function test_user_relation()
     {
-        $user = factory(User::class)
+        $user = User::factory()->active()
             ->create();
 
-        $posts = $user->posts()->save(factory(Post::class)->make());
+        $posts = $user->posts()->save(Post::factory()->make());
 
         $this->assertNotEmpty($posts);
         $this->assertNotNull($posts->user);
@@ -28,15 +28,15 @@ class PostTest extends TestCase
 
     public function test_comments_relation()
     {
-        $user =  factory(User::class)->create();
+        $user =  User::factory()->active()->create();
 
-        $post = factory(Post::class)->create([
+        $post = Post::factory()->create([
             'user_id' => $user->id
         ]);
 
         $post->comments()
-            ->saveMany(factory(Comment::class, 10)
-                ->make(['user_id' => factory(User::class)->create()]));
+            ->saveMany(Comment::factory()->times(10)
+                ->make(['user_id' => User::factory()->active()->create()]));
 
         $this->assertNotEmpty($post->comments);
         $this->assertCount(10, $post->comments);
@@ -44,15 +44,15 @@ class PostTest extends TestCase
 
     public function test_likes_relation()
     {
-        $user =  factory(User::class)->create();
-        $post = factory(Post::class)
+        $user =  User::factory()->active()->create();
+        $post = Post::factory()
             ->create([
                 'user_id' => $user->id
             ]);
 
         $post->likes()
             ->save(new Like([
-                'user_id' => factory(User::class)->create()->id,
+                'user_id' => User::factory()->active()->create()->id,
             ]));
 
         $this->assertNotEmpty($post->likes);
@@ -61,17 +61,14 @@ class PostTest extends TestCase
 
     public function test_reports_relation()
     {
-        $user =  factory(User::class)->create();
+        $user =  User::factory()->active()->create();
 
-        $post = factory(Post::class)->create([
+        $post = Post::factory()->create([
             'user_id' => $user->id,
         ]);
-
-        factory(Report::class, 10)->make(['user_id' => factory(User::class)->create()])
-            ->each(function (Report $report) use ($post) {
-                $post->reports()->save($report);
-            });
-
+        $post->reports()->saveMany(
+            Report::factory()->times(10)->make(['user_id' => User::factory()->active()->create()])
+        );
 
         $this->assertNotEmpty($post->reports);
         $this->assertCount(10, $post->reports);
@@ -79,14 +76,14 @@ class PostTest extends TestCase
 
     public function test_files_relation()
     {
-        $user =  factory(User::class)->create();
+        $user =  User::factory()->active()->create();
 
-        $post = factory(Post::class)->create([
+        $post = Post::factory()->create([
             'id' => $user->id,
             'user_id' => $user->id
         ]);
 
-        $post->files()->save(factory(File::class)->make());
+        $post->files()->save(File::factory()->make());
 
         $this->assertNotEmpty($post->files);
         $this->assertCount(1, $post->files);
