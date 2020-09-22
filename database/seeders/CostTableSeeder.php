@@ -1,7 +1,11 @@
 <?php
 
-use App\Cost;
-use App\User;
+namespace Database\Seeders;
+
+use App\Models\{
+    Cost,
+    User
+};
 use Illuminate\Database\Seeder;
 use Laravel\Passport\Passport;
 
@@ -9,10 +13,10 @@ class CostTableSeeder extends Seeder
 {
     public function __construct()
     {
-        $this->users = User::admin()->active()->get();
+        $this->user = User::admin()->active()->first();
         $this->names = collect([
             'Odontología',
-            'Administracion',
+            'Administración',
             'Derecho',
             'Ingeniería',
             'Documentos',
@@ -26,9 +30,9 @@ class CostTableSeeder extends Seeder
      */
     public function run()
     {
+        Passport::actingAs($this->user, ['admin']);
         $this->names->each(function ($name) {
-            Passport::actingAs($this->users->random());
-            factory(Cost::class)->create([
+            Cost::factory()->create([
                 'name' => $name,
             ]);
         });
