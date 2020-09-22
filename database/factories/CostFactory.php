@@ -8,7 +8,6 @@ use App\Models\{
 };
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Auth;
-use Laravel\Passport\Passport;
 
 class CostFactory extends Factory
 {

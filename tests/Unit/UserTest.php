@@ -2,16 +2,16 @@
 
 namespace Tests\Unit;
 
-use App\Advice;
-use App\Comment;
-use App\Cost;
-use App\Feedback;
-use App\File;
-use App\Like;
-use App\PasswordReset;
-use App\Post;
-use App\Report;
-use App\User;
+use App\Models\Advice;
+use App\Models\Comment;
+use App\Models\Cost;
+use App\Models\Feedback;
+use App\Models\File;
+use App\Models\Like;
+use App\Models\PasswordReset;
+use App\Models\Post;
+use App\Models\Report;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -29,7 +29,7 @@ class UserTest extends TestCase
 
     public function test_password_reset_relation()
     {
-        $user = factory(User::class)->create();
+        $user = User::factory()->active()->create();
 
         $token = base64_encode($user->id . password_hash(time() . rand(-99999, 99999), PASSWORD_DEFAULT) . uniqid());
         $expire = Carbon::now()->addHours(2);
@@ -47,15 +47,15 @@ class UserTest extends TestCase
 
     public function test_profile_relation()
     {
-        $user = factory(User::class)->create();
+        $user = User::factory()->active()->create();
         $this->assertNotNull($user->profile);
         $this->assertDatabaseHas('users', ['id' => $user->id]);
     }
 
     public function test_post_relation()
     {
-        $user = factory(User::class)->create();
-        $user->posts()->saveMany(factory(Post::class, 10)->make([
+        $user = User::factory()->active()->create();
+        $user->posts()->saveMany(Post::factory()->times(10)->make([
             'id' => Post::generate_id($user->id),
         ]));
 
@@ -65,13 +65,13 @@ class UserTest extends TestCase
 
     public function test_comments_relation()
     {
-        $user = factory(User::class)->create();
+        $user = User::factory()->active()->create();
 
-        factory(Post::class)->create([
+        Post::factory()->create([
             'id' => Post::generate_id($user->id),
-            'user_id' => factory(User::class)->create(),
+            'user_id' => User::factory()->active()->create(),
         ])->each(function (Post $post) use ($user) {
-            $post->comments()->saveMany(factory(Comment::class, 10)->make([
+            $post->comments()->saveMany(Comment::factory()->times(10)->make([
                 'user_id' => $user->id,
             ]));
         });
@@ -82,10 +82,10 @@ class UserTest extends TestCase
 
     public function test_likes_relation()
     {
-        $user = factory(User::class)->create();
+        $user = User::factory()->active()->create();
 
-        $post = factory(Post::class)
-            ->create(['user_id' => factory(User::class)->create()]);
+        $post = Post::factory()
+            ->create(['user_id' => User::factory()->active()->create()]);
 
         $post->likes()
             ->save(new Like([
@@ -98,27 +98,27 @@ class UserTest extends TestCase
 
     public function test_made_reports_relation()
     {
-        $user = factory(User::class)->create();
+        $user = User::factory()->active()->create();
 
-        factory(Report::class, 10)->make(['user_id' => $user->id])
+        Report::factory()->times(10)->make(['user_id' => $user->id])
             ->each(function (Report $report) {
                 switch ($this->faker->numberBetween(0, 2)) {
                     case 0:
-                        factory(Post::class)
-                            ->create(['user_id' => factory(User::class)->create()])
+                        Post::factory()
+                            ->create(['user_id' => User::factory()->active()->create()])
                             ->reports()->save($report);
                         break;
                     case 1:
-                        factory(Comment::class)
+                        Comment::factory()
                             ->create([
-                                'user_id' => factory(User::class)->create(),
-                                'post_id' => factory(Post::class)
-                                    ->create(['user_id' => factory(User::class)->create()])
+                                'user_id' => User::factory()->active()->create(),
+                                'post_id' => Post::factory()
+                                    ->create(['user_id' => User::factory()->active()->create()])
                             ])
                             ->reports()->save($report);
                         break;
                     default:
-                        factory(User::class)
+                        User::factory()->active()
                             ->create()
                             ->reports()->save($report);
                         break;
@@ -132,9 +132,9 @@ class UserTest extends TestCase
 
     public function test_reports_relation()
     {
-        $user = factory(User::class)->create();
+        $user = User::factory()->active()->create();
 
-        factory(Report::class, 10)->make(['user_id' => $user->id])
+        Report::factory()->times(10)->make(['user_id' => $user->id])
             ->each(function (Report $report) use ($user) {
                 $user->reports()->save($report);
             });
@@ -146,9 +146,9 @@ class UserTest extends TestCase
 
     public function test_feedback_relation()
     {
-        $user = factory(User::class)->create();
+        $user = User::factory()->active()->create();
 
-        $user->feedback()->saveMany(factory(Feedback::class, 10)->create());
+        $user->feedback()->saveMany(Feedback::factory()->times(10)->create());
 
         $this->assertNotEmpty($user->feedback);
         $this->assertCount(10, $user->feedback);
@@ -156,20 +156,20 @@ class UserTest extends TestCase
 
     public function test_file_relation()
     {
-        $user = factory(User::class)->create();
+        $user = User::factory()->active()->create();
 
-        $user->file()->save(factory(File::class)->make());
+        $user->file()->save(File::factory()->make());
 
         $this->assertNotEmpty($user->file);
     }
 
     public function test_modified_cost_relation()
     {
-        $user = factory(User::class)->create();
+        $user = User::factory()->active()->create();
 
         Passport::actingAs($user);
 
-        factory(Cost::class)->create([
+        Cost::factory()->create([
             'name' => $this->faker->randomElement(['Odontología', 'Ingeniería']),
             'modifier_user_id' => $user->id,
         ]);
@@ -179,11 +179,11 @@ class UserTest extends TestCase
 
     public function test_modified_advice_relation()
     {
-        $user = factory(User::class)->create();
+        $user = User::factory()->active()->create();
 
         Passport::actingAs($user);
 
-        factory(Advice::class)->create([
+        Advice::factory()->create([
             'modifier_user_id' => $user->id,
         ]);
 
@@ -196,7 +196,7 @@ class UserTest extends TestCase
 
     public function test_password_mutator()
     {
-        $user = factory(User::class)->create(['password' => 'secret']);
+        $user = User::factory()->active()->create(['password' => 'secret']);
         $this->assertNotEquals('secret', $user->password);
     }
 
@@ -207,20 +207,11 @@ class UserTest extends TestCase
 
     public function test_scopes()
     {
-        factory(User::class, 5)->states([
-            'admin',
-            'active',
-        ])->create();
+        User::factory()->times(5)->admin()->active()->create();
 
-        factory(User::class, 20)->states([
-            'user',
-            'active',
-        ])->create();
+        User::factory()->times(20)->user()->active()->create();
 
-        factory(User::class, 20)->states([
-            'user',
-            'banned'
-        ])->create();
+        User::factory()->times(20)->user()->banned()->create();
 
         User::admin()->get()->each(function (User $user) {
             $this->assertEquals(User::TYPES['admin'], $user->type);

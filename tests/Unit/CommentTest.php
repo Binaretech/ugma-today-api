@@ -2,11 +2,11 @@
 
 namespace Tests\Unit;
 
-use App\Comment;
-use App\Like;
-use App\Post;
-use App\Report;
-use App\User;
+use App\Models\Comment;
+use App\Models\Like;
+use App\Models\Post;
+use App\Models\Report;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -16,9 +16,9 @@ class CommentTest extends TestCase
 
     public function test_user_relation()
     {
-        $comment = factory(Comment::class)
+        $comment = Comment::factory()
             ->make([
-                'user_id' => factory(User::class)->create(),
+                'user_id' => User::factory()->create(),
             ]);
 
         $this->assertNotNull($comment->user);
@@ -27,12 +27,12 @@ class CommentTest extends TestCase
 
     public function test_post_relation()
     {
-        $user = factory(User::class)->create();
-        $post = factory(Post::class)->create([
+        $user = User::factory()->active()->create();
+        $post = Post::factory()->create([
             'user_id' => $user->id
         ]);
 
-        $comment = factory(Comment::class)
+        $comment = Comment::factory()
             ->create([
                 'user_id' => $user->id,
                 'post_id' => $post->id,
@@ -44,17 +44,17 @@ class CommentTest extends TestCase
 
     public function test_reports_relation()
     {
-        $user = factory(User::class)->create();
-        $comment = factory(Comment::class)
+        $user = User::factory()->active()->create();
+        $comment = Comment::factory()
             ->create([
                 'user_id' => $user->id,
-                'post_id' => factory(Post::class)->create([
-                    'user_id' => factory(User::class)->create()
+                'post_id' => Post::factory()->create([
+                    'user_id' => User::factory()->active()->create()
                 ]),
             ]);
 
-        $comment->reports()->saveMany(factory(Report::class, 10)->make([
-            'user_id' => factory(User::class)->create()
+        $comment->reports()->saveMany(Report::factory()->times(10)->make([
+            'user_id' => User::factory()->active()->create()
         ]));
 
         $this->assertNotNull($comment->post);
@@ -66,19 +66,19 @@ class CommentTest extends TestCase
 
     public function test_likes_relation()
     {
-        $user = factory(User::class)->create();
+        $user = User::factory()->active()->create();
 
-        $comment = factory(Comment::class)
+        $comment = Comment::factory()
             ->create([
                 'user_id' => $user->id,
-                'post_id' => factory(Post::class)->create([
-                    'user_id' => factory(User::class)->create()
+                'post_id' => Post::factory()->create([
+                    'user_id' => User::factory()->active()->create()
                 ]),
             ]);
 
         $comment->likes()
             ->save(new Like([
-                'user_id' => factory(User::class)->create()->id,
+                'user_id' => User::factory()->active()->create()->id,
             ]));
 
         $this->assertNotEmpty($comment->likes);
@@ -87,19 +87,19 @@ class CommentTest extends TestCase
 
     public function test_replies_and_reply_relations()
     {
-        $post = factory(Post::class)->create([
-            'user_id' => factory(User::class)->create()
+        $post = Post::factory()->create([
+            'user_id' => User::factory()->active()->create()
         ]);
 
-        $comment = factory(Comment::class)
+        $comment = Comment::factory()
             ->create([
-                'user_id' => factory(User::class)->create(),
+                'user_id' => User::factory()->active()->create(),
                 'post_id' => $post->id,
             ]);
 
-        $replyComment = factory(Comment::class)
+        $replyComment = Comment::factory()
             ->create([
-                'user_id' => factory(User::class)->create(),
+                'user_id' => User::factory()->active()->create(),
                 'post_id' => $post->id,
             ]);
 

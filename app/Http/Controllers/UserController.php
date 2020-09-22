@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Exceptions\DatabaseException;
 use App\Http\Resources\UserResource;
 use App\Traits\TransactionTrait;
-use App\User;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 /**
@@ -26,7 +26,7 @@ class UserController extends Controller
      * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
      * 
      * @apiResourceCollection  App\Http\Resources\UserResource
-     * @apiResourceModel  App\User
+     * @apiResourceModel  App\Models\User
      */
     public function index(Request $request): \Illuminate\Http\Resources\Json\AnonymousResourceCollection
     {

@@ -2,7 +2,7 @@
 
 namespace Tests\Feature;
 
-use App\User;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Laravel\Passport\Passport;
@@ -14,9 +14,9 @@ class UserControllerTest extends TestCase
 
     public function test_index()
     {
-        factory(User::class, 10)->create();
+        User::factory()->active()->create();
 
-        Passport::actingAs(factory(User::class)->create(), ['admin']);
+        Passport::actingAs(User::factory()->active()->create(), ['admin']);
         $this->get('api/admin/user')->assertOk()->assertJsonStructure(['data' => [
             ['id', 'username', 'status', 'type'],
         ], 'links', 'meta']);
@@ -24,7 +24,7 @@ class UserControllerTest extends TestCase
 
     public function test_show()
     {
-        $user = factory(User::class)->create();
+        $user = User::factory()->active()->create();
 
         Passport::actingAs($user, [User::TYPES[$user->type]]);
 
@@ -38,7 +38,7 @@ class UserControllerTest extends TestCase
 
     public function test_show_not_found()
     {
-        $user = factory(User::class)->create();
+        $user = User::factory()->active()->create();
 
         Passport::actingAs($user, [User::TYPES[$user->type]]);
 
@@ -47,8 +47,8 @@ class UserControllerTest extends TestCase
 
     public function test_ban()
     {
-        $admin = factory(User::class)->create(['type' => User::TYPES['admin']]);
-        $user = factory(User::class)->create();
+        $admin = User::factory()->active()->create(['type' => User::TYPES['admin']]);
+        $user = User::factory()->active()->create();
 
         Passport::actingAs($admin, [User::TYPES[$admin->type]]);
 
@@ -57,8 +57,8 @@ class UserControllerTest extends TestCase
 
     public function test_active()
     {
-        $admin = factory(User::class)->create(['type' => User::TYPES['admin']]);
-        $user = factory(User::class)->create(['status' => User::STATUS['ACTIVE']]);
+        $admin = User::factory()->active()->create(['type' => User::TYPES['admin']]);
+        $user = User::factory()->active()->create(['status' => User::STATUS['ACTIVE']]);
 
         Passport::actingAs($admin, [User::TYPES[$admin->type]]);
 
@@ -67,7 +67,7 @@ class UserControllerTest extends TestCase
 
     public function test_update()
     {
-        $user = factory(User::class)->create();
+        $user = User::factory()->active()->create();
 
         Passport::actingAs($user, [User::TYPES[$user->type]]);
 
@@ -81,7 +81,7 @@ class UserControllerTest extends TestCase
 
     public function test_destroy()
     {
-        $user = factory(User::class)->create();
+        $user = User::factory()->active()->create();
 
         Passport::actingAs($user, [User::TYPES[$user->type]]);
 

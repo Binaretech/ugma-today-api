@@ -2,8 +2,8 @@
 
 namespace Tests\Unit;
 
-use App\Advice;
-use App\User;
+use App\Models\Advice;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Laravel\Passport\Passport;
 use Tests\TestCase;
@@ -14,10 +14,10 @@ class AdviceTest extends TestCase
 
     public function test_modifyed_by_relation()
     {
-        $user = factory(User::class)->create();
+        $user = User::factory()->active()->create();
         Passport::actingAs($user, ['admin']);
 
-        $advice = factory(Advice::class)->create();
+        $advice = Advice::factory()->create();
         $this->assertEquals($user->id, $advice->modified_by->id);
     }
 }
