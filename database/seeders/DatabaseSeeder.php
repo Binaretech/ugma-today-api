@@ -21,7 +21,7 @@ class DatabaseSeeder extends Seeder
             PostTableSeeder::class,
             LikeTableSeeder::class,
             CostTableSeeder::class,
-            // AdviceSeeder::class
+            AdviceSeeder::class
         ]);
 
         $time = Carbon::now()->diffForHumans($time);
