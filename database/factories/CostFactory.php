@@ -7,6 +7,7 @@ use App\Models\{
     User,
 };
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Facades\Auth;
 use Laravel\Passport\Passport;
 
 class CostFactory extends Factory
@@ -39,8 +40,8 @@ class CostFactory extends Factory
      */
     public function configure()
     {
-        return $this->afterMakingState(function (Cost $cost) {
-            Passport::actingAs(User::factory()->create());
+        return $this->afterMaking(function (Cost $cost) {
+            $cost->modifier_user_id = Auth::user()->id;
         });
     }
 }

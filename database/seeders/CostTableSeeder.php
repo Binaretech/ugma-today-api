@@ -30,6 +30,7 @@ class CostTableSeeder extends Seeder
      */
     public function run()
     {
+
         Passport::actingAs($this->user, ['admin']);
         $this->names->each(function ($name) {
             Cost::factory()->create([
