@@ -105,7 +105,7 @@ class AuthControllerTest extends TestCase
             'password' => 'secret123',
         ]);
 
-        $this->post('api/login', [
+        $this->post('api/admin/login', [
             'username' => $user->username,
             'password' => 'secret123',
         ])->assertOk()->assertJsonStructure([
@@ -130,7 +130,7 @@ class AuthControllerTest extends TestCase
             'password' => 'secret123',
         ]);
 
-        $this->post('api/login', [
+        $this->post('api/admin/login', [
             'email' => $user->profile->email,
             'password' => 'secret123',
         ])->assertOk()->assertJsonStructure([
