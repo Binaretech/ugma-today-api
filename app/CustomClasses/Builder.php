@@ -17,6 +17,7 @@ class Builder extends EloquentBuilder
    * Paginate the given query.
    *
    * @param  int|null  $perPage
+   * @param  string $keyBy
    * @param  array  $columns
    * @param  string  $pageName
    * @param  int|null  $page

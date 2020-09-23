@@ -11,7 +11,7 @@ class LengthAwarePaginator extends PaginationLengthAwarePagination implements Ar
   {
     $key = $this->getOptions()['keyBy'];
     return [
-      'ids' => $this->items->pluck($key),
+      "{$key}s" => $this->items->pluck($key),
       'data' => $this->items->keyBy($key),
       'current_page' => $this->currentPage(),
       'last_page' => $this->lastPage(),
