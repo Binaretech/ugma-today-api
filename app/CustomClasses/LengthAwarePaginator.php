@@ -7,6 +7,11 @@ use Illuminate\Contracts\Support\Arrayable;
 
 class LengthAwarePaginator extends PaginationLengthAwarePagination implements Arrayable
 {
+  /**
+   * Get the instance as an array.
+   *
+   * @return array
+   */
   public function toArray()
   {
     $key = $this->getOptions()['keyBy'];

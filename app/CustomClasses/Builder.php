@@ -5,13 +5,9 @@ namespace App\CustomClasses;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use App\CustomClasses\LengthAwarePaginator;
 use Illuminate\Container\Container;
-use Illuminate\Database\Concerns\BuildsQueries;
 
 class Builder extends EloquentBuilder
 {
-  use BuildsQueries {
-    paginator as protected buildsQueriesPaginator;
-  }
 
   /**
    * Paginate the given query.
