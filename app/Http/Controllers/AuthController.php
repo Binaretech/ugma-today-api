@@ -97,7 +97,7 @@ class AuthController extends Controller
     {
         $request_data = $request->validate(User::LOGIN_RULES);
 
-        $user = User::get_by_username_or_email($request);
+        $user = User::get_by_username_or_email($request, $request->routeIs('/api/admin/login'));
 
         if (!password_verify($request_data['password'], $user->password)) {
             throw new AuthenticationException(trans('exception.login'));
