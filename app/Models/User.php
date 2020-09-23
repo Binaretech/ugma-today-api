@@ -170,15 +170,20 @@ class User extends Authenticatable
      * Search and return a user by username or email
      *
      * @param Request $data
+     * @param bool $admin search only admins
      * @return User
      */
-    public static function get_by_username_or_email(Request $request): User
+    public static function get_by_username_or_email(Request $request, bool $admin = false): User
     {
         return User::when($request->username, function ($query, $username) {
             $query->orWhere('users.username', $username);
         })
             ->when($request->email, function ($query, $email) {
                 $query->join('profiles', 'users.id', 'profiles.user_id')->orWhere('profiles.email', $email)->select("users.*");
-            })->first();
+            })
+            ->when($admin, function ($query) {
+                $query->where('type', User::TYPES['ADMIN']);
+            })
+            ->first();
     }
 }

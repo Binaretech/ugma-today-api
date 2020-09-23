@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Mail\PasswordResetMail;
 use App\Models\PasswordReset;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -82,6 +83,56 @@ class AuthControllerTest extends TestCase
         $this->post('api/login', [
             'email' => $register['email'],
             'password' => $register['password'],
+        ])->assertOk()->assertJsonStructure([
+            'data' => [
+                'id',
+                'username',
+                'type',
+                'profile' => [
+                    'name',
+                    'lastname',
+                    'email'
+                ],
+                'token'
+            ]
+        ]);
+    }
+
+    public function test_admin_login_with_username()
+    {
+
+        $user = User::factory()->admin()->active()->create([
+            'password' => 'secret123',
+        ]);
+
+        $this->post('api/admin/login', [
+            'username' => $user->username,
+            'password' => 'secret123',
+        ])->assertOk()->assertJsonStructure([
+            'data' => [
+                'id',
+                'username',
+                'type',
+                'profile' => [
+                    'name',
+                    'lastname',
+                    'email'
+                ],
+                'token'
+            ]
+        ]);
+    }
+
+    public function test_admin_login_with_email()
+    {
+
+        $user = User::factory()->admin()->active()->create([
+            'password' => 'secret123',
+        ]);
+
+        $this->post('api/admin/login', [
+            'email' => $user->profile->email,
+            'password' => 'secret123',
         ])->assertOk()->assertJsonStructure([
             'data' => [
                 'id',
