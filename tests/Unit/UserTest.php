@@ -229,4 +229,20 @@ class UserTest extends TestCase
             $this->assertEquals(User::STATUS['BANNED'], $user->status);
         });
     }
+
+    /*----------------------------------------------*/
+    /*             TEST CUSTOM FUNCTIONS            */
+    /*----------------------------------------------*/
+    public function test_pagination_in_users()
+    {
+        User::factory()->user()->active()->times(20)->create();
+
+        $users = User::paginate(10)->toArray();
+
+        $this->assertArrayHasKey('data', $users);
+        $this->assertArrayHasKey('ids', $users);
+
+        $random_user_id = $users['ids'][0];
+        $this->assertArrayHasKey($random_user_id, $users['data']);
+    }
 }
