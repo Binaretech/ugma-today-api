@@ -3,25 +3,37 @@
 namespace App\Models;
 
 use Carbon\Carbon;
+use Laravel\Passport\HasApiTokens;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Contracts\Auth\MustVerifyEmail as ContractAuthMustVerifyEmail;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Foundation\Auth\User as AuthUserAuthenticable;
 use Illuminate\Http\Request;
 use Illuminate\Notifications\Notifiable;
-use Laravel\Passport\HasApiTokens;
+use Illuminate\Auth\Authenticatable;
+use Illuminate\Auth\MustVerifyEmail;
+use Illuminate\Auth\Passwords\CanResetPassword;
+use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
+use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
+use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
+use Illuminate\Foundation\Auth\Access\Authorizable;
+use App\Models\Model;
 
-class User extends Authenticatable
+class User extends Model implements
+    AuthenticatableContract,
+    AuthorizableContract,
+    CanResetPasswordContract
 {
+    use Authenticatable, Authorizable, CanResetPassword, MustVerifyEmail;
     use Notifiable, HasApiTokens, SoftDeletes, HasFactory;
 
     protected $fillable = [
         'username', 'password', 'type'
     ];
 
-    protected $appends = [
-        'profile'
-    ];
+    // protected $appends = [
+    //     'profile'
+    // ];
 
     protected $hidden = [
         'password',
@@ -86,6 +98,22 @@ class User extends Authenticatable
         ];
     }
 
+    /**********************************************
+     * 
+     *          MUTATORS
+     * 
+     *********************************************/
+
+    public function setPasswordAttribute($value)
+    {
+        $this->attributes['password'] = bcrypt($value);
+    }
+
+    /**********************************************
+     * 
+     *          RELATIONS
+     * 
+     *********************************************/
     public function password_reset()
     {
         return $this->hasOne(PasswordReset::class);
@@ -141,11 +169,11 @@ class User extends Authenticatable
         return $this->hasMany(Advice::class, 'modifier_user_id');
     }
 
-    public function setPasswordAttribute($value)
-    {
-        $this->attributes['password'] = bcrypt($value);
-    }
-
+    /**********************************************
+     * 
+     *          SCOPES
+     * 
+     *********************************************/
     public function scopeUser($query)
     {
         return $query->where('type', User::TYPES['user']);
