@@ -18,17 +18,36 @@ class CostControllerTest extends TestCase
         Passport::actingAs(User::factory()->active()->create(), ['admin']);
         Cost::factory()->times(10)->create();
 
-        $this->get('/api/cost')
+        $response = $this->get('/api/cost');
+
+        $original_data = $response->original->toArray();
+
+        $response
             ->assertOk()
-            ->assertJsonStructure(['data' => [
-                [
-                    'id',
-                    'name',
-                    'comment',
-                    'price',
-                    'currency'
-                ]
-            ]]);
+            ->assertJsonStructure([
+                'ids' => [],
+                'data' => [
+                    $original_data['ids']->first() => [
+                        'id',
+                        'name',
+                        'comment',
+                        'price',
+                        'currency',
+
+                    ]
+                ],
+                'current_page',
+                'last_page',
+                'per_page',
+                'from',
+                'to',
+                'total',
+                'first_page_url',
+                'last_page_url',
+                'next_page_url',
+                'prev_page_url',
+                'path'
+            ]);
     }
 
     public function test_index_admin()
@@ -38,28 +57,46 @@ class CostControllerTest extends TestCase
 
         Passport::actingAs(User::factory()->active()->create(), ['admin']);
 
-        $this->get('/api/admin/cost')
+        $response = $this->get('/api/admin/cost');
+
+        $original_data = $response->original->toArray();
+
+        $response
             ->assertOk()
-            ->assertJsonStructure(['data' => [
-                [
-                    'id',
-                    'modifiedBy' => [
+            ->assertJsonStructure([
+                'ids' => [],
+                'data' => [
+                    $original_data['ids']->first() => [
                         'id',
-                        'username',
-                        'status',
-                        'type',
-                        'profile' => [
-                            'name',
-                            'lastname',
-                            'email'
-                        ]
-                    ],
-                    'name',
-                    'comment',
-                    'price',
-                    'currency'
-                ]
-            ]]);
+                        'name',
+                        'comment',
+                        'price',
+                        'currency',
+                        'modifiedBy' => [
+                            'id',
+                            'username',
+                            'status',
+                            'type',
+                            'profile' => [
+                                'name',
+                                'lastname',
+                                'email'
+                            ]
+                        ],
+                    ]
+                ],
+                'current_page',
+                'last_page',
+                'per_page',
+                'from',
+                'to',
+                'total',
+                'first_page_url',
+                'last_page_url',
+                'next_page_url',
+                'prev_page_url',
+                'path'
+            ]);
     }
 
     public function test_unauthorized_index_admin()
