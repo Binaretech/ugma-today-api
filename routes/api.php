@@ -46,7 +46,7 @@ Route::prefix('admin')->middleware(['auth:api', 'scope:admin'])->group(function 
     //------------------------------------------//
     //-----------------COSTS--------------------//
     //------------------------------------------//
-    Route::get('cost', [CostController::class, 'index_admin']);
+    Route::get('cost', [CostController::class, 'index']);
     Route::get('cost/{cost}', [CostController::class, 'show_admin']);
     Route::post('cost', [CostController::class, 'store']);
     Route::put('cost/{cost}', [CostController::class, 'update']);

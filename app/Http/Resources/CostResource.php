@@ -17,9 +17,6 @@ class CostResource extends JsonResource
     {
         return [
             "id" => $this->id,
-            "modifiedBy" => $this->whenLoaded('modified_by', function () {
-                return new UserResource($this->modified_by->load('profile'));
-            }),
             "name" => $this->name,
             "comment" => $this->comment,
             "price" => $this->price,
@@ -28,7 +25,10 @@ class CostResource extends JsonResource
             $this->mergeWhen($request->get('withTimestamps') === true, [
                 'createdAt' => $this->created_at,
                 'updatedAt' => $this->updated_at,
-            ])
+            ]),
+            "modifiedBy" => $this->whenLoaded('modified_by', function () {
+                return new UserResource($this->modified_by->load('profile'));
+            }),
         ];
     }
 }

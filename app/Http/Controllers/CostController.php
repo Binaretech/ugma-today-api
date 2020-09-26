@@ -17,59 +17,34 @@ class CostController extends Controller
     /**
      * Display a listing of registered costs.
      * @response 200 {
-     *   "data": [
-     *       {
-     *           "id": 1,
-     *           "name": "Odontología",
-     *           "comment": "Why, I haven't had a pencil that squeaked. This of course, I meant,' the King repeated angrily, 'or I'll have you executed on.",
-     *           "price": "325.07",
-     *           "currency": 1
-     *       }
-     *   ]
+     *   "ids": [
+     *      1
+     *   ],
+     * "data": {
+     *      "1": {
+     *         "id": 1,
+     *             "name": "Odontología",
+     *             "comment": "Said his father; 'don't give yourself airs! Do you think, at your age, it is right?' 'In my youth,' said the Mock Turtle.",
+     *             "price": "27885316.06",
+     *             "currency": 0,
+     *             "currencyName": "Bs",
+     *         }
+     *     },
      *  }
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function index(Request $request)
     {
-        return CostResource::collection(
-            Cost::paginate($request->pagination ?? 10)
-        );
-    }
+        $pagination = $request->pagination ?? 10;
 
-    /**
-     * @authenticated
-     * Display a listing of registered costs (for admins).
-     * @response 200 {
-     *   "data": [
-     *           {
-     *               "id": 1,
-     *               "modified_by": {
-     *                   "id": 1,
-     *                   "username": "mari_conazo",
-     *                   "status": 1,
-     *                   "type": 1,
-     *                   "profile": {
-     *                       "name": "Adalberto Klein",
-     *                       "lastname": "Prosacco",
-     *                       "email": "hintz.bailey@example.org"
-     *                   }
-     *               },
-     *               "name": "Odontología",
-     *               "comment": "Why, I haven't had a pencil that squeaked. This of course, I meant,' the King repeated angrily, 'or I'll have you executed on.",
-     *               "price": "325.07",
-     *               "currency": 1
-     *           }
-     *       ]
-     *   }
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function index_admin(Request $request)
-    {
-        return CostResource::collection(
-            Cost::paginate($request->pagination ?? 10)->load('modified_by')
-        );
+        if ($request->is('api/admin/cost')) {
+            $costs = Cost::with('modified_by')->paginate($pagination);
+
+            return (CostResource::collection($costs))->resource;
+        }
+
+        return (CostResource::collection(Cost::paginate($pagination)))->resource;
     }
 
     /**
