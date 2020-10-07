@@ -18,6 +18,7 @@ class ProfileResource extends JsonResource
             "name" => $this->name,
             "lastname" => $this->lastname,
             "email" => $this->email,
+            "fullname" => "$this->name $this->lastname",
             $this->mergeWhen($request->get('withTimestamps') === true, [
                 'created_at' => $this->created_at,
                 'updated_at' => $this->updated_at,
