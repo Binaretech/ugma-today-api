@@ -14,7 +14,7 @@ class UsersTableSeeder extends Seeder
      */
     public function run()
     {
-        User::factory()->admin()->active()->create(['username' => 'mari_conazo']);
+        User::factory()->admin()->active()->create(['username' => 'admin']);
 
         User::factory()->times(20)->user()->active()->create();
 
