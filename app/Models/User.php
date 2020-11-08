@@ -44,6 +44,7 @@ class User extends Authenticable
     public const REGISTER_RULES = [
         'username' => 'required|unique:users|min:3|max:40',
         'password' => 'required|min:6|max:45',
+        'password_confirmation' => 'required|confirmed',
         'name' => 'required|min:2|max:50',
         'lastname' => 'required|min:2|max:50',
         'email' => 'required|unique:profiles|email:rfc'
