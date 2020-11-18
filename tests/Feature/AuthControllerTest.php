@@ -17,9 +17,12 @@ class AuthControllerTest extends TestCase
 
     public function test_register()
     {
+        $password = $this->faker->password;
+
         $this->post('api/register', [
             'username' => $this->faker->userName,
-            'password' => $this->faker->password,
+            'password' => $password,
+            'password_confirmation' => $password,
             'name' => $this->faker->name,
             'lastname' => $this->faker->lastName,
             'email' => $this->faker->safeEmail,
@@ -40,9 +43,11 @@ class AuthControllerTest extends TestCase
 
     public function test_login_with_username()
     {
+        $password = $this->faker->password;
         $register = [
             'username' => $this->faker->userName,
-            'password' => $this->faker->password,
+            'password' => $password,
+            'password_confirmation' => $password,
             'name' => $this->faker->name,
             'lastname' => $this->faker->lastName,
             'email' => $this->faker->safeEmail,
@@ -70,9 +75,11 @@ class AuthControllerTest extends TestCase
 
     public function test_login_with_email()
     {
+        $password = $this->faker->password;
         $register = [
             'username' => $this->faker->username,
-            'password' => $this->faker->password,
+            'password' => $password,
+            'password_confirmation' => $password,
             'name' => $this->faker->name,
             'lastname' => $this->faker->lastName,
             'email' => $this->faker->safeEmail,
@@ -150,9 +157,12 @@ class AuthControllerTest extends TestCase
 
     public function test_fail_login()
     {
+        $password = $this->faker->password;
+
         $register = [
             'username' => $this->faker->userName,
-            'password' => $this->faker->password,
+            'password' => $password,
+            'password_confirmation' => $password,
             'name' => $this->faker->name,
             'lastname' => $this->faker->lastName,
             'email' => $this->faker->safeEmail,
@@ -170,9 +180,12 @@ class AuthControllerTest extends TestCase
     {
         Mail::fake();
 
+        $password = $this->faker->password;
+
         $register = [
             'username' => $this->faker->userName,
-            'password' => $this->faker->password,
+            'password' => $password,
+            'password_confirmation' => $password,
             'name' => $this->faker->name,
             'lastname' => $this->faker->lastName,
             'email' => 'alanbrito@gmail.com',
