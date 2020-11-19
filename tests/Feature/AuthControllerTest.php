@@ -9,6 +9,7 @@ use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Mail;
+use Laravel\Passport\Passport;
 use Tests\TestCase;
 
 class AuthControllerTest extends TestCase
@@ -221,5 +222,21 @@ class AuthControllerTest extends TestCase
             'token' => $password_reset->token,
             'password' => $this->faker->password
         ])->assertStatus(422);
+    }
+
+    public function test_logout_user_success()
+    {
+        $user = User::factory()->active()->create();
+        Passport::actingAs($user);
+        $response = $this->get('api/logout');
+
+        $response->assertOk();
+    }
+
+    public function test_logout_user_error()
+    {
+        $response = $this->get('api/logout');
+
+        $response->assertUnauthorized();
     }
 }

@@ -30,25 +30,26 @@ Route::middleware('auth:api')->group(function () {
     Route::put('user', [UserController::class, 'update']);
     Route::delete('user', [UserController::class, 'destroy']);
     Route::apiResource('user', UserController::class)->only('show');
+
+    Route::get('logout', [AuthController::class, 'logout']);
+
+    Route::prefix('admin')->middleware('scope:admin')->group(function () {
+
+        Route::apiResource('user', UserController::class)->except(['store', 'update', 'delete', 'show']);
+
+        Route::post('ban/user/{user}', [UserController::class, 'ban']);
+
+        Route::post('active/user/{user}', [UserController::class, 'active']);
+
+        //------------------------------------------//
+        //-----------------COSTS--------------------//
+        //------------------------------------------//
+        Route::get('cost', [CostController::class, 'index']);
+        Route::get('cost/{cost}', [CostController::class, 'show_admin']);
+        Route::post('cost', [CostController::class, 'store']);
+        Route::put('cost/{cost}', [CostController::class, 'update']);
+        Route::delete('cost/{cost}', [CostController::class, 'destroy']);
+    });
 });
 
 Route::apiResource('cost', CostController::class)->only(['index', 'show']);
-
-
-Route::prefix('admin')->middleware(['auth:api', 'scope:admin'])->group(function () {
-
-    Route::apiResource('user', UserController::class)->except(['store', 'update', 'delete', 'show']);
-
-    Route::post('ban/user/{user}', [UserController::class, 'ban']);
-
-    Route::post('active/user/{user}', [UserController::class, 'active']);
-
-    //------------------------------------------//
-    //-----------------COSTS--------------------//
-    //------------------------------------------//
-    Route::get('cost', [CostController::class, 'index']);
-    Route::get('cost/{cost}', [CostController::class, 'show_admin']);
-    Route::post('cost', [CostController::class, 'store']);
-    Route::put('cost/{cost}', [CostController::class, 'update']);
-    Route::delete('cost/{cost}', [CostController::class, 'destroy']);
-});
