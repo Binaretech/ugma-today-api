@@ -185,12 +185,6 @@ class AuthController extends Controller
      */
     public function logout()
     {
-        if (!Auth::check())
-            return response([
-                'message' => trans('responses.AuthController.logout.error')
-            ], 400);
-
-
         Auth::user()->token()->revoke();
         return response()->json([
             'message' => trans('responses.AuthController.logout.success')
