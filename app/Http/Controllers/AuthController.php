@@ -12,6 +12,7 @@ use App\Traits\TransactionTrait;
 use Carbon\Carbon;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 
 /**
@@ -174,6 +175,19 @@ class AuthController extends Controller
 
         return response()->json([
             'message' => trans('responses.reset_password'),
+        ]);
+    }
+
+    /*
+     * Logout the current user session 
+     *
+     * @return Illuminate\Http\JsonResponse
+     */
+    public function logout()
+    {
+        Auth::user()->token()->revoke();
+        return response()->json([
+            'message' => trans('responses.AuthController.logout.success')
         ]);
     }
 }
