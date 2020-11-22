@@ -78,8 +78,8 @@ class Handler extends ExceptionHandler
      * @return array
      */
     protected function convertExceptionToArray(Throwable $e)
-    {
-        return config('app.debug') ? [
+	{
+		return config('app.debug') ? [
             'message' => $e->getMessage(),
             'exception' => get_class($e),
             'file' => $e->getFile(),
@@ -106,7 +106,6 @@ class Handler extends ExceptionHandler
     }
 
     /**
-     * Render an exception into an HTTP response.
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \Throwable $exception

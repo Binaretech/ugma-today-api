@@ -3,23 +3,26 @@
 namespace Tests\Feature;
 
 use App\Models\User;
-use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Foundation\Testing\WithFaker;
 use Laravel\Passport\Passport;
 use Tests\TestCase;
 
 class UserControllerTest extends TestCase
 {
-    use RefreshDatabase, WithFaker;
+    use DatabaseTransactions, WithFaker;
 
     public function test_index()
     {
         User::factory()->active()->create();
 
         Passport::actingAs(User::factory()->active()->create(), ['admin']);
-        $this->get('api/admin/user')->assertOk()->assertJsonStructure(['data' => [
-            ['id', 'username', 'status', 'type'],
-        ], 'links', 'meta']);
+		$this->get('api/admin/user')
+			->assertOk()
+			->assertJsonStructure([
+				'ids',
+				'data', 
+			]);
     }
 
     public function test_show()
