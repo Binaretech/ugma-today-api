@@ -1,12 +1,11 @@
 <?php
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\{
     AuthController,
     CostController,
-	UserController,
-	PostController,
+    UserController,
+    PostController,
 };
 
 /*
@@ -31,15 +30,16 @@ Route::middleware('auth:api')->group(function () {
     Route::put('user', [UserController::class, 'update']);
     Route::delete('user', [UserController::class, 'destroy']);
     Route::apiResource('user', UserController::class)->only('show');
+    Route::get('logout', [AuthController::class, 'logout']);
 });
-
 
 Route::apiResource('cost', CostController::class)->only(['index', 'show']);
 
 Route::get('post', [PostController::class, 'index_post']);
 Route::get('news', [PostController::class, 'index_news']);
 
-Route::prefix('admin')->middleware(['auth:api', 'scope:admin'])->group(function () {
+
+Route::prefix('admin')->middleware('scope:admin')->group(function () {
 
     Route::apiResource('user', UserController::class)->except(['store', 'update', 'delete', 'show']);
 
@@ -54,11 +54,12 @@ Route::prefix('admin')->middleware(['auth:api', 'scope:admin'])->group(function 
     Route::get('cost/{cost}', [CostController::class, 'show_admin']);
     Route::post('cost', [CostController::class, 'store']);
     Route::put('cost/{cost}', [CostController::class, 'update']);
-	Route::delete('cost/{cost}', [CostController::class, 'destroy']);
+    Route::delete('cost/{cost}', [CostController::class, 'destroy']);
 
     //------------------------------------------//
     //-----------------POSTS--------------------//
-	//------------------------------------------//
-	route::get('post', [PostController::class, 'index_admin']);
-
+    //------------------------------------------//
+    route::get('post', [PostController::class, 'index_admin']);
 });
+
+Route::apiResource('cost', CostController::class)->only(['index', 'show']);

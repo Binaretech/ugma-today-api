@@ -9,6 +9,7 @@ use Carbon\Carbon;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Mail;
+use Laravel\Passport\Passport;
 use Tests\TestCase;
 
 class AuthControllerTest extends TestCase
@@ -17,9 +18,12 @@ class AuthControllerTest extends TestCase
 
     public function test_register()
     {
+        $password = $this->faker->password;
+
         $this->post('api/register', [
             'username' => $this->faker->userName,
-            'password' => $this->faker->password,
+            'password' => $password,
+            'password_confirmation' => $password,
             'name' => $this->faker->name,
             'lastname' => $this->faker->lastName,
             'email' => $this->faker->safeEmail,
@@ -40,9 +44,11 @@ class AuthControllerTest extends TestCase
 
     public function test_login_with_username()
     {
+        $password = $this->faker->password;
         $register = [
             'username' => $this->faker->userName,
-            'password' => $this->faker->password,
+            'password' => $password,
+            'password_confirmation' => $password,
             'name' => $this->faker->name,
             'lastname' => $this->faker->lastName,
             'email' => $this->faker->safeEmail,
@@ -70,9 +76,11 @@ class AuthControllerTest extends TestCase
 
     public function test_login_with_email()
     {
+        $password = $this->faker->password;
         $register = [
             'username' => $this->faker->username,
-            'password' => $this->faker->password,
+            'password' => $password,
+            'password_confirmation' => $password,
             'name' => $this->faker->name,
             'lastname' => $this->faker->lastName,
             'email' => $this->faker->safeEmail,
@@ -150,9 +158,12 @@ class AuthControllerTest extends TestCase
 
     public function test_fail_login()
     {
+        $password = $this->faker->password;
+
         $register = [
             'username' => $this->faker->userName,
-            'password' => $this->faker->password,
+            'password' => $password,
+            'password_confirmation' => $password,
             'name' => $this->faker->name,
             'lastname' => $this->faker->lastName,
             'email' => $this->faker->safeEmail,
@@ -170,9 +181,12 @@ class AuthControllerTest extends TestCase
     {
         Mail::fake();
 
+        $password = $this->faker->password;
+
         $register = [
             'username' => $this->faker->userName,
-            'password' => $this->faker->password,
+            'password' => $password,
+            'password_confirmation' => $password,
             'name' => $this->faker->name,
             'lastname' => $this->faker->lastName,
             'email' => 'alanbrito@gmail.com',
@@ -208,5 +222,21 @@ class AuthControllerTest extends TestCase
             'token' => $password_reset->token,
             'password' => $this->faker->password
         ])->assertStatus(422);
+    }
+
+    public function test_logout_user_success()
+    {
+        $user = User::factory()->active()->create();
+        Passport::actingAs($user);
+        $response = $this->get('api/logout');
+
+        $response->assertOk();
+    }
+
+    public function test_logout_user_error()
+    {
+        $response = $this->get('api/logout');
+
+        $response->assertUnauthorized();
     }
 }
