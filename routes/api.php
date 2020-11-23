@@ -31,7 +31,7 @@ Route::middleware('auth:api')->group(function () {
     Route::delete('user', [UserController::class, 'destroy']);
     Route::apiResource('user', UserController::class)->only('show');
 
-    Route::get('logout', [AuthController::class, 'logout']);
+    Route::delete('logout', [AuthController::class, 'logout']);
 
     Route::prefix('admin')->middleware('scope:admin')->group(function () {
 
