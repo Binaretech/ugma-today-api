@@ -7,12 +7,12 @@ use App\Models\Like;
 use App\Models\Post;
 use App\Models\Report;
 use App\Models\User;
-use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\TestCase;
 
 class CommentTest extends TestCase
 {
-    use RefreshDatabase;
+    use DatabaseTransactions;
 
     public function test_user_relation()
     {
@@ -98,7 +98,7 @@ class CommentTest extends TestCase
             ]);
 
         $replyComment = Comment::factory()
-            ->create([
+            ->make([
                 'user_id' => User::factory()->active()->create(),
                 'post_id' => $post->id,
             ]);
@@ -107,6 +107,6 @@ class CommentTest extends TestCase
             ->save($replyComment);
 
         $this->assertNotEmpty($comment->replies);
-        $this->assertNotNull($replyComment->reply);
+        $this->assertNotNull($replyComment->reply_to);
     }
 }

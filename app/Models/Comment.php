@@ -9,6 +9,10 @@ class Comment extends Model
 {
     use HasFactory;
 
+	protected $fillable = [
+		'user_id', 'post_id'
+	];
+
     public function user()
     {
         return $this->belongsTo(User::class);
@@ -29,7 +33,7 @@ class Comment extends Model
         return $this->morphMany(Like::class, 'likeable');
     }
 
-    public function reply()
+    public function reply_to()
     {
         return $this->belongsTo(Comment::class, 'reply_to_id');
     }

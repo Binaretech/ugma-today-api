@@ -13,7 +13,7 @@ use App\Models\Post;
 use App\Models\Report;
 use App\Models\User;
 use Carbon\Carbon;
-use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Foundation\Testing\WithFaker;
 use Laravel\Passport\Passport;
 use Tests\TestCase;
@@ -21,7 +21,7 @@ use Tests\TestCase;
 class UserTest extends TestCase
 {
 
-    use RefreshDatabase, WithFaker;
+    use DatabaseTransactions, WithFaker;
 
     /*----------------------------------------------*/
     /*                TEST RELATIONS                */
