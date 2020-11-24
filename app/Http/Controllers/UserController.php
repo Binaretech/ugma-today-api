@@ -28,7 +28,7 @@ class UserController extends Controller
      * @apiResourceCollection  App\Http\Resources\UserResource
      * @apiResourceModel  App\Models\User
      */
-    public function index(Request $request): \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+    public function index(Request $request): \App\CustomClasses\LengthAwarePaginator
     {
         $request->validate(User::FILTER_RULES);
 
@@ -48,7 +48,7 @@ class UserController extends Controller
                 return $query->where('type', $request->input('type'));
             });
 
-        return UserResource::collection($query->paginate($request->pagination ?? 10));
+        return (UserResource::collection($query->paginate($request->pagination ?? 10)))->resource;
     }
 
     /**

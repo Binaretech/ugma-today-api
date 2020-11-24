@@ -4,10 +4,13 @@ namespace Tests\Unit;
 
 use App\Models\User;
 use Tests\TestCase;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class ProfileTest extends TestCase
 {
-    public function test_user_relation()
+	use DatabaseTransactions;
+
+	public function test_user_relation()
     {
         $profile = User::factory()->active()->create()->profile;
 
