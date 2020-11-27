@@ -88,7 +88,7 @@ class Handler extends ExceptionHandler
                 return Arr::except($trace, ['args']);
             })->all(),
         ] : [
-            'message' => $this->isHttpException($e) ? $e->getMessage() : trans('exceptions.internal_error'),
+            'message' => $e->getMessage(),
         ];
     }
 
