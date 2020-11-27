@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\{
     AuthController,
     CostController,
+    StatisticController,
     UserController,
     PostController,
 };
@@ -46,6 +47,7 @@ Route::prefix('admin')->middleware('scope:admin')->group(function () {
     Route::post('ban/user/{user}', [UserController::class, 'ban']);
 
     Route::post('active/user/{user}', [UserController::class, 'active']);
+	Route::get('summary', [StatisticController::class, 'index']);	
 
     //------------------------------------------//
     //-----------------COSTS--------------------//
@@ -59,7 +61,10 @@ Route::prefix('admin')->middleware('scope:admin')->group(function () {
     //------------------------------------------//
     //-----------------POSTS--------------------//
     //------------------------------------------//
-    route::get('post', [PostController::class, 'index_admin']);
+    Route::get('post', [PostController::class, 'index_admin']);
 });
 
 Route::apiResource('cost', CostController::class)->only(['index', 'show']);
+
+Route::get('post', [PostController::class, 'index_post']);
+Route::get('news', [PostController::class, 'index_news']);
