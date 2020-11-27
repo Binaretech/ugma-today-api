@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Post;
-use App\Http\Resources\PostIndexResource;
+use App\Http\Resources\NewsIndexResource;
 
 class PostController extends Controller
 {
@@ -27,8 +27,9 @@ class PostController extends Controller
 			->where('type', Post::TYPES['REGULAR'])
 			->orderBy('created_at', 'DESC');
 
-		
-		return (PostIndexResource::collection($query->paginate($request->pagination?? 10)))->resource;
+
+		// TODO add an aproppiate resource
+		return $query->paginate($request->pagination?? 10);
 	}
 
 	
@@ -50,7 +51,7 @@ class PostController extends Controller
 			->where('type', Post::TYPES['NEWS'])
 			->orderBy('created_at', 'DESC');
 
-		return (PostIndexResource::collection($query->paginate($request->pagination?? 10)))->resource;
+		return (NewsIndexResource::collection($query->paginate($request->pagination?? 10)))->resource;
 	}   
 
 	
