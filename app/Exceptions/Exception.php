@@ -2,10 +2,10 @@
 
 namespace App\Exceptions;
 
-use Exception;
+use Exception as BaseException;
 use Throwable;
 
-class DatabaseException extends Exception
+class Exception extends BaseException
 {
     /**
      * Render an exception into an HTTP response.
@@ -19,14 +19,6 @@ class DatabaseException extends Exception
     public function render()
     {
         $response = ['message' => $this->message];
-
-        $previous = $this->getPrevious();
-        if (config('app.debug') && isset($previous)) {
-            $response = array_merge($response, [
-                'error' => $previous->getMessage(),
-                'trace' => $previous->getTrace(),
-            ]);
-        }
 
         return response()->json($response, $this->code === 0 ? 500 : $this->code);
     }

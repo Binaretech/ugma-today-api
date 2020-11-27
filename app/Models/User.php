@@ -13,7 +13,7 @@ use App\CustomClasses\User as Authenticable;
 
 class User extends Authenticable
 {
-    use Notifiable, HasApiTokens, SoftDeletes, HasFactory;
+    use Notifiable, SoftDeletes, HasFactory;
 
     protected $fillable = [
         'username', 'password', 'type'
@@ -201,5 +201,12 @@ class User extends Authenticable
                 $query->where('type', User::TYPES['ADMIN']);
             })
             ->first();
-    }
+	}
+
+	public function findForPassport($identifier) {
+		return $this->join('profiles', 'profiles.user_id', 'user_id')
+			  ->where('users.username', $identifier)
+			  ->orWhere('profiles.email', $identifier)->first();
+	}
 }
+
