@@ -4,7 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class PostResource extends JsonResource
+class PostIndexResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -17,10 +17,10 @@ class PostResource extends JsonResource
 		return [
 			'id' => $this->id,
 			'title' => $this->title,
-			'content' => $this->content,
-			'type' => $this->type,
 			'user' => new UserResource($this->user),
-		     $this->mergeWhen($request->get('withTimestamps') === true, [
+			'likes' => $this->likesCount,   
+			'comments' => $this->commentsCount,
+			$this->mergeWhen($request->get('withTimestamps') === true, [
                 'createdAt' => $this->created_at,
                 'updatedAt' => $this->updated_at,
             ]),	

@@ -24,5 +24,11 @@ class FileFactory extends Factory
         return [
             "url" => $this->faker->url,
         ];
-    }
+	}
+
+	public function profile_image() {
+		return $this->state([
+			'url' => $this->faker->imageUrl()
+		]);
+	}
 }
