@@ -32,31 +32,6 @@ Route::middleware('auth:api')->group(function () {
     Route::delete('user', [UserController::class, 'destroy']);
     Route::apiResource('user', UserController::class)->only('show');
     Route::get('logout', [AuthController::class, 'logout']);
-
-	Route::prefix('admin')->middleware('scope:admin')->group(function () {
-
-		Route::apiResource('user', UserController::class)->except(['store', 'update', 'delete', 'show']);
-
-		Route::post('ban/user/{user}', [UserController::class, 'ban']);
-		route::get('summary', [StatisticController::class, 'index']);	
-
-		Route::apiResource('user', UserController::class)->except(['store', 'update', 'delete', 'show']);
-		Route::post('active/user/{user}', [UserController::class, 'active']);
-
-		//------------------------------------------//
-		//-----------------COSTS--------------------//
-		//------------------------------------------//
-		Route::get('cost', [CostController::class, 'index']);
-		Route::get('cost/{cost}', [CostController::class, 'show_admin']);
-		Route::post('cost', [CostController::class, 'store']);
-		Route::put('cost/{cost}', [CostController::class, 'update']);
-		Route::delete('cost/{cost}', [CostController::class, 'destroy']);
-
-		//------------------------------------------//
-		//-----------------POSTS--------------------//
-		//------------------------------------------//
-		route::get('post', [PostController::class, 'index_admin']);
-	});
 });
 
 Route::apiResource('cost', CostController::class)->only(['index', 'show']);
@@ -65,3 +40,32 @@ Route::get('post', [PostController::class, 'index_post']);
 Route::get('news', [PostController::class, 'index_news']);
 
 
+Route::prefix('admin')->middleware('scope:admin')->group(function () {
+
+    Route::apiResource('user', UserController::class)->except(['store', 'update', 'delete', 'show']);
+
+    Route::post('ban/user/{user}', [UserController::class, 'ban']);
+
+    Route::post('active/user/{user}', [UserController::class, 'active']);
+	Route::get('summary', [StatisticController::class, 'index']);	
+
+    //------------------------------------------//
+    //-----------------COSTS--------------------//
+    //------------------------------------------//
+    Route::get('cost', [CostController::class, 'index']);
+    Route::get('cost/{cost}', [CostController::class, 'show_admin']);
+    Route::post('cost', [CostController::class, 'store']);
+    Route::put('cost/{cost}', [CostController::class, 'update']);
+    Route::delete('cost/{cost}', [CostController::class, 'destroy']);
+
+    //------------------------------------------//
+    //-----------------POSTS--------------------//
+    //------------------------------------------//
+    Route::get('post', [PostController::class, 'index_admin']);
+});
+
+Route::apiResource('cost', CostController::class)->only(['index', 'show']);
+
+Route::get('post', [PostController::class, 'index_post']);
+Route::get('news', [PostController::class, 'index_news']);
+Route::get('news/{id}', [PostController::class, 'show_news']);

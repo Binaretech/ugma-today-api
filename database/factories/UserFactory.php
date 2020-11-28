@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\{
+    File,
     User,
     Profile,
 };
@@ -99,7 +100,8 @@ class UserFactory extends Factory
     public function configure()
     {
         return $this->afterCreating(function (User $user) {
-            $user->profile()->save(Profile::factory()->make());
+			$user->profile()->save(Profile::factory()->make());
+			$user->file()->save(File::factory()->profile_image()->make());
         });
     }
 }

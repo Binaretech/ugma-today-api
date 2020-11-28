@@ -64,9 +64,18 @@ class Post extends Model
     public function files()
     {
         return $this->morphMany(File::class, 'fileable');
-    }
+	}
 
-    public function scopeType($query, $type)
+	public function getLikesCountAttribute() {
+		return $this->likes()->count();
+	}
+
+
+	public function getCommentsCountAttribute() {
+		return $this->comments()->count();
+	}
+
+	public function scopeType($query, $type)
     {
         return $query->where('type', $type);
 	}

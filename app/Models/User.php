@@ -92,6 +92,10 @@ class User extends Authenticable
      * 
      *********************************************/
 
+	public function getProfileImageAttribute() {
+		return $this->file()->where('type', File::TYPES['PROFILE_IMAGE'])->first();
+	}
+
     public function setPasswordAttribute($value)
     {
         $this->attributes['password'] = bcrypt($value);

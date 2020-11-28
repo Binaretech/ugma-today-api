@@ -31,12 +31,11 @@ class PostTableSeeder extends Seeder
 		});
 
 		User::active()->where('type', User::TYPES['admin'])->each(function(User $user){
-			$quantity = rand(1,3);
-			$user->posts()->saveMany(Post::factory()->times($quantity)->make([
+			$user->posts()->saveMany(Post::factory()->times(10)->make([
 				'type' => Post::TYPES['DRAFT'],
 			]));
 
-			$user->posts()->saveMany(Post::factory()->times($quantity)->make([
+			$user->posts()->saveMany(Post::factory()->times(10)->make([
 				'type' => Post::TYPES['NEWS'],
 			]));
 
