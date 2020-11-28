@@ -68,3 +68,4 @@ Route::apiResource('cost', CostController::class)->only(['index', 'show']);
 
 Route::get('post', [PostController::class, 'index_post']);
 Route::get('news', [PostController::class, 'index_news']);
+Route::get('news/{id}', [PostController::class, 'show_news']);

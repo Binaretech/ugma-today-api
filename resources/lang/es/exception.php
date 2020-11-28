@@ -9,5 +9,8 @@ return [
     'resource' => [
         'App\\User' => 'Usuario',
         'App\\Cost' => 'Costo'
-    ]
+	],
+	'PostController' => [
+		'not_found_news' => 'Noticia no encontrada',	
+	],
 ];
