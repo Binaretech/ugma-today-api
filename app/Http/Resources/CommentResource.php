@@ -24,7 +24,10 @@ class CommentResource extends JsonResource
 			$this->mergeWhen($request->get('withTimestamps') === 'true', [
                 'createdAt' => $this->created_at,
                 'updatedAt' => $this->updated_at,
-            ]),	
+			]),
+			$this->mergeWhen(isset($this->reply_to_id), [
+				'reply_to_id' => $this->reply_to_id,
+			])
 		];
     }
 }
