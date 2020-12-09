@@ -4,10 +4,13 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Models\Model;
+use Illuminate\Support\Facades\Auth;
 
 class Post extends Model
 {
     use HasFactory;
+
+	protected $appends = ['liked_by_user'];
 
     protected static function booted()
     {
@@ -64,6 +67,14 @@ class Post extends Model
     public function files()
     {
         return $this->morphMany(File::class, 'fileable');
+	}
+
+	public function getLikedByUserAttribute() {
+		$user = Auth::guard('api')->user();
+		
+		if(!$user) return false;
+
+		return $this->likes()->where('user_id', $user->id)->exists();
 	}
 
 	public function getLikesCountAttribute() {

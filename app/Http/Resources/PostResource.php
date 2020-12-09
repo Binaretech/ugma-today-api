@@ -20,6 +20,7 @@ class PostResource extends JsonResource
 			'content' => $this->content,
 			'type' => $this->type,
 			'user' => new UserResource($this->user),
+			'likedByUser' => $this->likedByUser,
 			'likesCount' => $this->likesCount,
 			'commentsCount' => $this->CommentsCount,
 			'comments' => CommentResource::collection($this->comments()->whereNull('reply_to_id')->paginate($request->pagination??10)),

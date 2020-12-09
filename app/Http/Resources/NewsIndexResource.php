@@ -22,6 +22,7 @@ class NewsIndexResource extends JsonResource
 			'comments' => $this->commentsCount,
 			'preview' => substr($this->content, 0, 200),
 			'isCutted' => strlen($this->content) > 200,
+			'likedByUser' => $this->liked_by_user,
 			$this->mergeWhen($request->get('withTimestamps') === "true", [
                 'createdAt' => $this->created_at,
                 'updatedAt' => $this->updated_at,

@@ -3,7 +3,6 @@
 namespace App\Exceptions;
 
 use Exception;
-use Illuminate\Http\Request;
 use Throwable;
 
 class DatabaseException extends Exception
@@ -17,7 +16,7 @@ class DatabaseException extends Exception
      *
      * @throws \Throwable
      */
-    public function render(Request $request)
+    public function render()
     {
         $response = ['message' => $this->message];
 
