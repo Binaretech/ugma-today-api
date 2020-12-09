@@ -52,4 +52,23 @@ class PostControllerTest extends TestCase
 				]
 			]);				
 	}
+
+	public function test_like_cost() {
+		$post = User::factory()->create()->posts()->save(Post::factory()->make());
+		Passport::actingAs(User::factory()->create(), ['user']);
+
+		$this->post('api/post/like/'. $post->id)
+		   ->assertCreated();
+	}
+	
+	public function test_fail_like_cost() {
+		$post = User::factory()->create()->posts()->save(Post::factory()->make());
+		Passport::actingAs(User::factory()->create(), ['user']);
+
+		$this->post('api/post/like/'. $post->id)
+	   ->assertCreated();
+	
+		$this->post('api/post/like/'. $post->id)
+	   ->assertStatus(400);
+	}
 }

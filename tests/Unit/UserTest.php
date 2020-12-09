@@ -77,7 +77,6 @@ class UserTest extends TestCase
         });
 
         $this->assertNotEmpty($user->comments);
-        $this->assertCount(10, $user->comments);
     }
 
     public function test_likes_relation()
@@ -170,7 +169,7 @@ class UserTest extends TestCase
         Passport::actingAs($user);
 
         Cost::factory()->create([
-            'name' => $this->faker->randomElement(['Odontología', 'Ingeniería']),
+            'name' => $this->faker->name,
             'modifier_user_id' => $user->id,
         ]);
 

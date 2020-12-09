@@ -10,9 +10,13 @@ class Comment extends Model
     use HasFactory;
 
 	protected $fillable = [
-		'user_id', 'post_id'
+			'user_id', 'post_id', 'comment'
 	];
 
+	public const STORE_RULES = [
+		'comment' => 'required|string|min:1|max:500',
+	];
+	
     public function user()
     {
         return $this->belongsTo(User::class);

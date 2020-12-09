@@ -6,10 +6,13 @@ use Illuminate\Http\Request;
 use App\Models\Post;
 use App\Http\Resources\NewsIndexResource;
 use App\Http\Resources\PostResource;
-use Exception;
+use App\Models\Like;
+use App\Traits\TransactionTrait;
+use App\Exceptions\Exception;
 
 class PostController extends Controller
 {
+	use TransactionTrait;
 
 	public function index_post(Request $request)
 	{
@@ -66,5 +69,45 @@ class PostController extends Controller
 		}
 
 		return new PostResource($post);	
+	}
+
+	public function like_post(Request $request, $id) {
+		$post = Post::find($id);
+
+		if(!$post) {
+			throw new Exception(trans('exception.PostController.not_found_post'), 404);
+		}
+
+		$user = $request->user();
+
+		if($post->likes()->where('user_id', $user->id)->exists()) {
+			throw new Exception(trans('exception.PostController.already_liked'), 400);
+		}
+
+		$post->likes()->save(new Like(['user_id' => $user->id]));
+
+        return response()->json(['message' => trans('responses.success')], 201);
+	}
+
+	public function unlike_post(Request $request, $id) {
+		$post = Post::find($id);
+
+		if(!$post) {
+			throw new Exception(trans('exception.PostController.not_found_post'), 404);
+		}
+
+		$user = $request->user();
+
+		$like =	$post->likes()->where(['user_id' => $user->id])->first();
+
+		if(!$like) {
+			throw new Exception(trans('exception.PostController.already_unliked'), 400);
+		}
+
+		if(!$like->delete()) {
+			throw new Exception(trans('exception.internal_error'));
+		}
+
+		return response()->json(['message' => trans('responses.success')], 200);
 	}
 }
