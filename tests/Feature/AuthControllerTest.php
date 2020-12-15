@@ -228,14 +228,14 @@ class AuthControllerTest extends TestCase
     {
         $user = User::factory()->active()->create();
         Passport::actingAs($user);
-        $response = $this->delete('api/logout');
+        $response = $this->post('api/logout');
 
         $response->assertOk();
     }
 
     public function test_logout_user_error()
     {
-        $response = $this->delete('api/logout');
+        $response = $this->post('api/logout');
 
         $response->assertUnauthorized();
     }
