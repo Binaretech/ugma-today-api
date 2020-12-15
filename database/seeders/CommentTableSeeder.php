@@ -19,14 +19,14 @@ class CommentTableSeeder extends Seeder
 		$users = User::get();
 	
 		Post::get()->each(function(Post $post) use($users) {
-			$quantity = rand(1, 10);
+			$quantity = rand(5, 10);
 			$post->comments()->saveMany(Comment::factory()->times($quantity)->make(['user_id' => $users->random()->id]));
 		});
 
 		Comment::get()->each(function(Comment $comment) use($users){
 			if(rand(0,1) === 0) return;
 
-			$quantity = rand(1,5);
+			$quantity = rand(2,5);
 			
 			$replies = Comment::factory()
 				->times($quantity)

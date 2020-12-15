@@ -4,7 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class PostResource extends JsonResource
+class CommentResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -16,19 +16,15 @@ class PostResource extends JsonResource
     {
 		return [
 			'id' => $this->id,
-			'title' => $this->title,
-			'content' => $this->content,
-			'type' => $this->type,
-			'user' => new UserResource($this->user),
-			'likedByUser' => $this->likedByUser,
-			'likesCount' => $this->likesCount,
-			'commentsCount' => $this->CommentsCount,
-			'comments' => CommentResource::collection($this->comments()->whereNull('reply_to_id')->paginate($request->pagination??10)),
+			'user' => new UserResource($this->user->load('profile')),
+			'comment' => $this->comment,
+			'replies' => $this->replies->count(),
+			'likes' => $this->likes()->count(),
+			'replies' => $this->replies()->count(),
 			$this->mergeWhen($request->get('withTimestamps') === 'true', [
                 'createdAt' => $this->created_at,
                 'updatedAt' => $this->updated_at,
             ]),	
 		];
-	}
+    }
 }
-
