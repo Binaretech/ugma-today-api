@@ -43,7 +43,7 @@ Route::middleware('auth:api')->group(function () {
 	//------------------------------------------//
 	Route::post('post/like/{id}', [PostController::class, 'like_post']);
 	Route::post('post/unlike/{id}', [PostController::class, 'unlike_post']);
-	Route::post('post/{post}/comment', [CommentController::class, 'store']);
+	Route::post('comment/{post}', [CommentController::class, 'store']);
 
 	Route::post('comment/{comment}/reply', [CommentController::class, 'reply']);
 	Route::post('comment/like/{comment}', [CommentController::class, 'like']);
@@ -55,8 +55,10 @@ Route::apiResource('cost', CostController::class)->only(['index', 'show']);
 Route::get('post', [PostController::class, 'index_post']);
 Route::get('news', [PostController::class, 'index_news']);
 
+Route::get('comment/{post}', [CommentController::class, 'index']);
+Route::get('replies/{comment}', [CommentController::class, 'index_replies']);
 
-Route::prefix('admin')->middleware('scope:admin')->group(function () {
+Route::prefix('admin')->middleware(['auth:api', 'scope:admin'])->group(function () {
 
 	Route::apiResource('user', UserController::class)->except(['store', 'update', 'delete', 'show']);
 	Route::post('ban/user/{user}', [UserController::class, 'ban']);

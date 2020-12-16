@@ -27,12 +27,22 @@ class CommentControllerTest extends TestCase
 
 		Passport::actingAs($test_user, ['user']);
 
-		$this->post('api/post/' . $post->id . '/comment', $data)
+		$this->post('api/comment/' . $post->id, $data)
 			->assertCreated();
 
 		$post->refresh();
 
 		$this->assertCount(1, $post->comments);
+	}
+
+	public function test_index()
+	{
+		$post = User::factory()->create()->posts()->save(Post::factory()->make());
+		$post->comments()->saveMany(Comment::factory()->times(10)->make(['user_id' => User::factory()->create()->id]));
+
+		$this->get('api/comment/' . $post->id)
+			->assertOk()
+			->assertJsonStructure(['ids', 'data']);
 	}
 
 	public function test_like()
