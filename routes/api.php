@@ -29,7 +29,7 @@ Route::post('passwordReset', [AuthController::class, 'password_reset_email']);
 Route::post('resetPassword', [AuthController::class, 'reset_password']);
 
 Route::middleware('auth:api')->group(function () {
-	Route::get('logout', [AuthController::class, 'logout']);
+	Route::post('logout', [AuthController::class, 'logout']);
 
 	//------------------------------------------//
 	//-----------------USER--------------------//
