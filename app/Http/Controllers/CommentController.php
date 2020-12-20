@@ -13,12 +13,16 @@ class CommentController extends Controller
 {
 	public function index(Request $request, Post $post)
 	{
-		return CommentResource::collection($post->comments()->orderBy('created_at', 'ASC')->paginate($request->pagination ?? 10))->resource;
+		return CommentResource::collection(
+			$post->comments()->orderBy('created_at', 'ASC')->paginate($request->pagination ?? 10)
+		)->resource;
 	}
 
 	public function index_replies(Request $request, Comment $comment)
 	{
-		return CommentResource::collection($comment->replies()->orderBy('created_at', 'ASC')->paginate($request->pagination ?? 10))->resource;
+		return CommentResource::collection(
+			$comment->replies()->orderBy('created_at', 'ASC')->paginate($request->pagination ?? 10)
+		)->resource;
 	}
 
 	public function store(Request $request, Post $post)
