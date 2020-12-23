@@ -28,20 +28,6 @@ Route::post('admin/login', [AuthController::class, 'login']);
 Route::post('passwordReset', [AuthController::class, 'password_reset_email']);
 Route::post('resetPassword', [AuthController::class, 'reset_password']);
 
-
-Route::apiResource('cost', CostController::class)->only(['index', 'show']);
-
-Route::get('post', [PostController::class, 'index_post']);
-Route::get('news', [PostController::class, 'index_news']);
-
-Route::get('comment/{post}', [CommentController::class, 'index']);
-Route::get('replies/{comment}', [CommentController::class, 'index_replies']);
-Route::apiResource('cost', CostController::class)->only(['index', 'show']);
-
-Route::get('post', [PostController::class, 'index_post']);
-Route::get('news', [PostController::class, 'index_news']);
-Route::get('news/{id}', [PostController::class, 'show_news']);
-
 Route::middleware('auth:api')->group(function () {
 	Route::post('logout', [AuthController::class, 'logout']);
 
@@ -62,23 +48,36 @@ Route::middleware('auth:api')->group(function () {
 	Route::post('comment/{comment}/reply', [CommentController::class, 'reply']);
 	Route::post('comment/like/{comment}', [CommentController::class, 'like']);
 	Route::post('comment/unlike/{comment}', [CommentController::class, 'unlike']);
-
-
-	Route::prefix('admin')->middleware('scope:admin')->group(function () {
-
-		Route::apiResource('user', UserController::class)->except(['store', 'update', 'delete', 'show']);
-		Route::post('ban/user/{user}', [UserController::class, 'ban']);
-
-		Route::post('active/user/{user}', [UserController::class, 'active']);
-		Route::get('summary', [StatisticController::class, 'index']);
-
-		//------------------------------------------//
-		//-----------------COSTS--------------------//
-		//------------------------------------------//
-		Route::get('cost', [CostController::class, 'index']);
-		Route::get('cost/{cost}', [CostController::class, 'show_admin']);
-		Route::post('cost', [CostController::class, 'store']);
-		Route::put('cost/{cost}', [CostController::class, 'update']);
-		Route::delete('cost/{cost}', [CostController::class, 'destroy']);
-	});
 });
+
+Route::apiResource('cost', CostController::class)->only(['index', 'show']);
+
+Route::get('post', [PostController::class, 'index_post']);
+Route::get('news', [PostController::class, 'index_news']);
+
+Route::get('comment/{post}', [CommentController::class, 'index']);
+Route::get('replies/{comment}', [CommentController::class, 'index_replies']);
+
+Route::prefix('admin')->middleware(['auth:api', 'scope:admin'])->group(function () {
+
+	Route::apiResource('user', UserController::class)->except(['store', 'update', 'delete', 'show']);
+	Route::post('ban/user/{user}', [UserController::class, 'ban']);
+
+	Route::post('active/user/{user}', [UserController::class, 'active']);
+	Route::get('summary', [StatisticController::class, 'index']);
+
+	//------------------------------------------//
+	//-----------------COSTS--------------------//
+	//------------------------------------------//
+	Route::get('cost', [CostController::class, 'index']);
+	Route::get('cost/{cost}', [CostController::class, 'show_admin']);
+	Route::post('cost', [CostController::class, 'store']);
+	Route::put('cost/{cost}', [CostController::class, 'update']);
+	Route::delete('cost/{cost}', [CostController::class, 'destroy']);
+});
+
+Route::apiResource('cost', CostController::class)->only(['index', 'show']);
+
+Route::get('post', [PostController::class, 'index_post']);
+Route::get('news', [PostController::class, 'index_news']);
+Route::get('news/{id}', [PostController::class, 'show_news']);
