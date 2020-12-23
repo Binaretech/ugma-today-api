@@ -19,5 +19,6 @@ return [
 	],
 	'CommentController' => [
 		'store' => 'No se pudo guardar el comentario, intente de nuevo.',
+		'reply' => 'No puede responder a un comentario de respuesta',
 	]
 ];

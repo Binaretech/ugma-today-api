@@ -47,6 +47,8 @@ class CommentController extends Controller
 
 	public function reply(Request $request, Comment $comment)
 	{
+		if ($comment->reply_to_id) throw new Exception(trans('exception.CommentController.reply'));
+
 		$request_data = $request->validate(Comment::STORE_RULES);
 
 		$reply = $comment->replies()->save(new Comment(array_merge(
