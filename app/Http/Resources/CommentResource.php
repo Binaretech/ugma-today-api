@@ -18,9 +18,10 @@ class CommentResource extends JsonResource
 			'id' => $this->id,
 			'user' => new UserResource($this->user->load('profile')),
 			'comment' => $this->comment,
-			'replies' => CommentResource::collection($this->replies()->paginate(2))->resource,
+			'replies' => ['ids' => $this->replies()->paginate(2)->pluck('id')],
 			'repliesCount' => $this->replies->count(),
 			'likes' => $this->likes()->count(),
+			'likedByUser' => $this->likedByUser,
 			$this->mergeWhen($request->get('withTimestamps') === 'true', [
 				'createdAt' => $this->created_at,
 				'updatedAt' => $this->updated_at,
