@@ -41,7 +41,6 @@ class CommentControllerTest extends TestCase
 		$post->comments()->saveMany(Comment::factory()->times(10)->make(['user_id' => User::factory()->create()->id]));
 
 		$this->get('api/comment/' . $post->id)
-			->dump()
 			->assertOk()
 			->assertJsonStructure(['comments' => ['ids', 'data'], 'replies']);
 	}
