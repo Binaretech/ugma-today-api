@@ -14,6 +14,11 @@ class PostResource extends JsonResource
 	 */
 	public function toArray($request)
 	{
+		$comments = $this->comments()
+			->whereNull('reply_to_id')
+			->orderBy('created_at', 'ASC')
+			->paginate($request->pagination ?? 10);
+
 		return [
 			'id' => $this->id,
 			'title' => $this->title,
@@ -23,7 +28,9 @@ class PostResource extends JsonResource
 			'likedByUser' => $this->likedByUser,
 			'likesCount' => $this->likesCount,
 			'commentsCount' => $this->CommentsCount,
-			'comments' => CommentResource::collection($this->comments()->whereNull('reply_to_id')->orderBy('created_at', 'ASC')->paginate($request->pagination ?? 10))->resource,
+			'comments' => CommentResource::collection($comments)->resource,
+			'replies' => CommentResource::collection($this->comments()
+				->whereIn('reply_to_id', $comments->pluck('id'))->get()->keyBy('id'))->resource,
 			$this->mergeWhen($request->get('withTimestamps') === 'true', [
 				'createdAt' => $this->created_at,
 				'updatedAt' => $this->updated_at,

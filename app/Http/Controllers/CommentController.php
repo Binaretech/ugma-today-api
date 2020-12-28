@@ -13,9 +13,12 @@ class CommentController extends Controller
 {
 	public function index(Request $request, Post $post)
 	{
-		return CommentResource::collection(
-			$post->comments()->orderBy('created_at', 'ASC')->paginate($request->pagination ?? 10)
-		)->resource;
+		$comments =	$post->comments()->orderBy('created_at', 'ASC')->paginate($request->pagination ?? 10);
+
+		return response()->json([
+			'comments' => CommentResource::collection($comments)->resource,
+			'replies' => Comment::whereIn('reply_to_id', $comments->pluck('id'))->get()->keyBy('id'),
+		]);
 	}
 
 	public function index_replies(Request $request, Comment $comment)
@@ -44,6 +47,8 @@ class CommentController extends Controller
 
 	public function reply(Request $request, Comment $comment)
 	{
+		if ($comment->reply_to_id) throw new Exception(trans('exception.CommentController.reply'));
+
 		$request_data = $request->validate(Comment::STORE_RULES);
 
 		$reply = $comment->replies()->save(new Comment(array_merge(

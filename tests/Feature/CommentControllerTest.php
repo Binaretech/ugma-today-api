@@ -42,7 +42,7 @@ class CommentControllerTest extends TestCase
 
 		$this->get('api/comment/' . $post->id)
 			->assertOk()
-			->assertJsonStructure(['ids', 'data']);
+			->assertJsonStructure(['comments' => ['ids', 'data'], 'replies']);
 	}
 
 	public function test_like()
