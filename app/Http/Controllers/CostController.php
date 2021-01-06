@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 
 /**
  * @group Cost
- * 
+ *
  * Cost routes
  */
 class CostController extends Controller
@@ -17,8 +17,7 @@ class CostController extends Controller
     /**
      * Display a listing of registered costs.
      * @response 200 {
-     *   "ids": [
-     *      1
+     *   "ids": [ 1
      *   ],
      * "data": {
      *      "1": {
@@ -39,12 +38,12 @@ class CostController extends Controller
         $pagination = $request->pagination ?? 10;
 
         if ($request->is('api/admin/cost')) {
-            $costs = Cost::with('modified_by')->paginate($pagination);
+            $costs = Cost::with('modified_by')->orderBy('id', 'ASC')->paginate($pagination);
 
             return (CostResource::collection($costs))->resource;
         }
 
-        return (CostResource::collection(Cost::paginate($pagination)))->resource;
+        return (CostResource::collection(Cost::orderBy('name', 'ASC')->paginate($pagination)))->resource;
     }
 
     /**
@@ -53,7 +52,7 @@ class CostController extends Controller
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
-     * 
+     *
      * @bodyParam name string required User's first name. Example: lorem@gmail.com
      * @bodyParam price string required price to register.
      * @bodyParam currency string required cost currency.
@@ -82,7 +81,7 @@ class CostController extends Controller
      *
      * @param  Cost  $cost
      * @return CostResource
-     * 
+     *
      * @urlParam cost required Cost by id. Example: 2
      * @response 200 {
      * "data": {
@@ -104,7 +103,7 @@ class CostController extends Controller
      *
      * @param  Cost  $cost
      * @return CostResource
-     * 
+     *
      * @urlParam cost required Cost by id. Example: 2
      * @response 200 {
      *  "data": {
