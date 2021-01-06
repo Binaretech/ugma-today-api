@@ -14,20 +14,20 @@ class NewsIndexResource extends JsonResource
      */
     public function toArray($request)
     {
-		return [
-			'id' => $this->id,
-			'title' => $this->title,
-			'user' => new UserResource($this->user),
-			'likes' => $this->likesCount,   
-			'comments' => $this->commentsCount,
-			'preview' => substr($this->content, 0, 200),
-			'isCutted' => strlen($this->content) > 200,
-			'likedByUser' => $this->liked_by_user,
-			$this->mergeWhen($request->get('withTimestamps') === "true", [
+        return [
+            'id' => $this->id,
+            'title' => $this->title,
+            'user' => new UserResource($this->user),
+            'likes' => $this->likesCount,
+            'comments' => $this->commentsCount,
+            'preview' => substr($this->content, 0, 200),
+            'content' => $this->content,
+            'isCutted' => strlen($this->content) > 200,
+            'likedByUser' => $this->liked_by_user,
+            $this->mergeWhen($request->get('withTimestamps') === "true", [
                 'createdAt' => $this->created_at,
                 'updatedAt' => $this->updated_at,
-            ]),	
-		];
-	}
+            ]),
+        ];
+    }
 }
-
