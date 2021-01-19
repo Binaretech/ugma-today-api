@@ -53,6 +53,24 @@ class Post extends Model
         ];
     }
 
+
+    public static function update_post_rules()
+    {
+        return [
+            'id' => 'required|exists:posts',
+            'title' => 'sometimes|required|string|min:3',
+            'content' => 'sometimes|required|string|min:10',
+            'type' => 'required|in:' . join(',', self::TYPES),
+        ];
+    }
+
+    public static function delete_post_rules()
+    {
+        return [
+            'id' => 'required|exists:posts',
+        ];
+    }
+
     public function user()
     {
         return $this->belongsTo(User::class);
@@ -115,7 +133,6 @@ class Post extends Model
 
     public static function generate_id(int $user_id)
     {
-        $count = (optional(Post::selectRaw('COUNT(*) as count')->where('user_id', $user_id)->first())->count ?: 0) + 1;
-        return "$user_id-$count";
+        return uniqid("$user_id-");
     }
 }

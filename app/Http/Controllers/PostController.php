@@ -142,4 +142,36 @@ class PostController extends Controller
 
         return response()->json(['message' => trans('responses.success')]);
     }
+
+    public function update_news(Request $request, $id)
+    {
+        $request->request->add(['id' => $id]);
+        $request->validate(Post::update_post_rules());
+
+        $news = Post::find($request->id);
+        $request->request->remove('id');
+        $news->fill($request->all());
+
+        if (!$news->save())
+            throw new Exception(trans('exception.internal_error'));
+
+        return response()->json([
+            'message' => trans('responses.success')
+        ]);
+    }
+
+    public function delete_news(Request $request, $id)
+    {
+        $request->request->add(['id' => $id]);
+        $request->validate(Post::delete_post_rules());
+
+        $news = Post::find($request->id);
+
+        if (!$news->delete())
+            throw new Exception(trans('exception.internal_error'));
+
+        return response()->json([
+            'message' => trans('responses.success'),
+        ]);
+    }
 }

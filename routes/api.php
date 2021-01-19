@@ -79,6 +79,8 @@ Route::prefix('admin')->middleware(['auth:api', 'scope:admin'])->group(function 
     //-----------------POSTS--------------------//
     //------------------------------------------//
     Route::post('news', [PostController::class, 'store_news']);
+    Route::put('news/{id}', [PostController::class, 'update_news']);
+    Route::delete('news/{id}', [PostController::class, 'delete_news']);
 });
 
 Route::apiResource('cost', CostController::class)->only(['index', 'show']);
