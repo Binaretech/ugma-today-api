@@ -55,7 +55,7 @@ class AuthController extends Controller
      */
     public function register(Request $request)
     {
-        $request_data = $request->validate(User::REGISTER_RULES);
+        $request_data = $request->validate(User::register_rules());
 
         $user = new User();
 
