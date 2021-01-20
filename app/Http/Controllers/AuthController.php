@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Mail;
 
 /**
  * @group Auth
- * 
+ *
  * Authentication related routes
  */
 class AuthController extends Controller
@@ -29,9 +29,9 @@ class AuthController extends Controller
      *
      * @param Request $request
      * @return UserResource
-     * 
+     *
      * @throws Exception on creation failure
-     * 
+     *
      * @bodyParam username string required New username in the app.
      * @bodyParam password string required For authenticate with the app.
      * @bodyParam name string required User's first name. Example: lorem@gmail.com
@@ -72,9 +72,9 @@ class AuthController extends Controller
      *
      * @param Request $request
      * @return UserResource
-     * 
+     *
      * @throws Exception on creation failure
-     * 
+     *
      * @bodyParam username string optional required without email.
      * @bodyParam email email optional required without username.
      * @bodyParam password string optional For authenticate with the app.
@@ -112,9 +112,9 @@ class AuthController extends Controller
      *
      * @param Request $request
      * @return UserResource
-     * 
+     *
      * @throws Exception on creation failure
-     * 
+     *
      * @bodyParam email required Password recovery email address
      * @response {
      *  "message": "Success."
@@ -150,9 +150,9 @@ class AuthController extends Controller
      *
      * @param Request $request
      * @return Illuminate\Http\JsonResponse
-     * 
+     *
      * @throws Exception on creation failure
-     * 
+     *
      * @bodyParam token required Password recovery token
      * @bodyParam password required New password
      * @response {
@@ -179,7 +179,7 @@ class AuthController extends Controller
     }
 
     /*
-     * Logout the current user session 
+     * Logout the current user session
      *
      * @return Illuminate\Http\JsonResponse
      */
