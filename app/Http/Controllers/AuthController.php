@@ -57,10 +57,6 @@ class AuthController extends Controller
     {
         $request_data = $request->validate(User::REGISTER_RULES);
 
-        if ($request_data['password'] === '123456' || $request_data['password'] === 'abcdef') {
-            return response()->json(['message' => trans('exception.weak_password')]);
-        }
-
         $user = new User();
 
         self::transaction(function () use ($request_data, &$user) {
