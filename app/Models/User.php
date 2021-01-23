@@ -74,6 +74,21 @@ class User extends Authenticable
         'email' => 'sometimes|unique:profiles|email:rfc'
     ];
 
+    public static function register_rules()
+    {
+        return [
+            'username' => 'required|unique:users|min:3|max:40',
+            'password' => ['required', 'min:6', 'max:45', 'confirmed', function ($attribute, $value, $fail) {
+                if ($value === '123456' || $value === 'abcdef') {
+                    $fail(trans('exception.weak_password'));
+                }
+            }],
+            'name' => 'required|min:2|max:50',
+            'lastname' => 'required|min:2|max:50',
+            'email' => 'required|unique:profiles|email:rfc'
+        ];
+    }
+
     public static function reset_rules()
     {
         return [
@@ -87,14 +102,15 @@ class User extends Authenticable
     }
 
     /**********************************************
-     * 
+     *
      *          MUTATORS
-     * 
+     *
      *********************************************/
 
-	public function getProfileImageAttribute() {
-		return $this->file()->where('type', File::TYPES['PROFILE_IMAGE'])->first();
-	}
+    public function getProfileImageAttribute()
+    {
+        return $this->file()->where('type', File::TYPES['PROFILE_IMAGE'])->first();
+    }
 
     public function setPasswordAttribute($value)
     {
@@ -102,9 +118,9 @@ class User extends Authenticable
     }
 
     /**********************************************
-     * 
+     *
      *          RELATIONS
-     * 
+     *
      *********************************************/
     public function password_reset()
     {
@@ -162,9 +178,9 @@ class User extends Authenticable
     }
 
     /**********************************************
-     * 
+     *
      *          SCOPES
-     * 
+     *
      *********************************************/
     public function scopeUser($query)
     {
