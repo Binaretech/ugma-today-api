@@ -100,8 +100,10 @@ class UserFactory extends Factory
     public function configure()
     {
         return $this->afterCreating(function (User $user) {
-			$user->profile()->save(Profile::factory()->make());
-			$user->file()->save(File::factory()->profile_image()->make());
+            if (config('app.env') !== 'production') {
+                $user->profile()->save(Profile::factory()->make());
+                $user->file()->save(File::factory()->profile_image()->make());
+            }
         });
     }
 }

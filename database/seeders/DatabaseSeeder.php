@@ -16,14 +16,18 @@ class DatabaseSeeder extends Seeder
     {
         $time = Carbon::now();
 
-        $this->call([
-            UsersTableSeeder::class,
-			PostTableSeeder::class,
-			CommentTableSeeder::class,
-            LikeTableSeeder::class,
-            CostTableSeeder::class,
-            AdviceSeeder::class
-        ]);
+        if (config('app.env') === 'production') {
+            $this->call(UsersTableSeeder::class);
+        } else {
+            $this->call([
+                PostTableSeeder::class,
+                CommentTableSeeder::class,
+                LikeTableSeeder::class,
+                CostTableSeeder::class,
+                AdviceSeeder::class
+            ]);
+        }
+
 
         $time = Carbon::now()->diffForHumans($time);
 

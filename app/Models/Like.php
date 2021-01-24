@@ -7,22 +7,19 @@ use App\Models\Model;
 
 class Like extends Model
 {
-	use HasFactory;
+    use HasFactory;
 
-	protected $primaryKey = 'user_id';
-	public $incrementing = false;
+    protected $fillable = [
+        'user_id'
+    ];
 
-	protected $fillable = [
-		'user_id'
-	];
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 
-	public function user()
-	{
-		return $this->belongsTo(User::class);
-	}
-
-	public function likeable()
-	{
-		return $this->morphTo();
-	}
+    public function likeable()
+    {
+        return $this->morphTo();
+    }
 }

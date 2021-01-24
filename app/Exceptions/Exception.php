@@ -18,6 +18,6 @@ class Exception extends BaseException
      */
     public function render()
     {
-        return response()->json($this->message, $this->code === 0 ? 500 : $this->code);
+        return response()->json(['message' => $this->message], $this->code === 0 ? 500 : $this->code);
     }
 }

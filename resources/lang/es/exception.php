@@ -18,10 +18,13 @@ return [
         'not_found_news' => 'Noticia no encontrada',
         'not_found_post' => 'Publicación no encontrada',
         'already_liked' => 'Ya le ha indicado que le gusta esta publicación',
+        'already_unliked' => 'Ya le ha indicado que le no gusta esta publicación',
         'error_saving' => 'Hubo un error al guardar la publicación, intente nuevamente',
     ],
     'CommentController' => [
         'store' => 'No se pudo guardar el comentario, intente de nuevo.',
         'reply' => 'No puede responder a un comentario de respuesta',
+        'already_liked' => 'Ya le ha indicado que le gusta este comentario',
+        'already_unliked' => 'Ya le ha indicado que le no gusta este comentario',
     ]
 ];
