@@ -140,7 +140,7 @@ class PostController extends Controller
 
         if (!$post->save()) throw new Exception(trans('exception.error_saving'), 500);
 
-        return response()->json(['message' => trans('responses.success')]);
+        return response()->json(['message' => trans('responses.success')], 201);
     }
 
     public function update_news(Request $request, $id)
