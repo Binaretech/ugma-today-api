@@ -8,6 +8,8 @@ return [
     'invalid_data' => 'Los datos proporcionados no son válidos.',
     'invalid_user_rights' => 'El usuario no cuenta con permisos apropiados.',
     'weak_password' => 'La contraseña introducida no está permitida',
+    'username_used' => 'El valor del campo username ya está en uso',
+    'email_used' => 'El valor del campo email ya está en uso',
     'resource' => [
         'App\\Models\\User' => 'Usuario no encontrado',
         'App\\Models\\Cost' => 'Costo no encotrado',

@@ -67,11 +67,12 @@ class User extends Authenticable
     ];
 
     public const UPDATE_RULES = [
-        'username' => 'sometimes|unique:users|min:3|max:40',
-        'password' => 'sometimes|min:6|max:45',
+        'username' => 'sometimes|min:3|max:40',
+        'old_password' => 'sometimes|min:6|max:45',
+        'password' => 'sometimes|required_with:old_password|min:6|max:45',
         'name' => 'sometimes|min:2|max:50',
         'lastname' => 'sometimes|min:2|max:50',
-        'email' => 'sometimes|unique:profiles|email:rfc'
+        'email' => 'sometimes|email:rfc'
     ];
 
     public static function register_rules()
