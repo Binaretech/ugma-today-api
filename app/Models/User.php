@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Http\Request;
 use Illuminate\Notifications\Notifiable;
 use App\CustomClasses\User as Authenticable;
+use Illuminate\Support\Facades\Auth;
 
 class User extends Authenticable
 {
@@ -66,15 +67,6 @@ class User extends Authenticable
         'deletedOnly' => 'sometimes|boolean',
     ];
 
-    public const UPDATE_RULES = [
-        'username' => 'sometimes|min:3|max:40',
-        'old_password' => 'sometimes|min:6|max:45',
-        'password' => 'sometimes|required_with:old_password|min:6|max:45',
-        'name' => 'sometimes|min:2|max:50',
-        'lastname' => 'sometimes|min:2|max:50',
-        'email' => 'sometimes|email:rfc'
-    ];
-
     public static function register_rules()
     {
         return [
@@ -87,6 +79,47 @@ class User extends Authenticable
             'name' => 'required|min:2|max:50',
             'lastname' => 'required|min:2|max:50',
             'email' => 'required|unique:profiles|email:rfc'
+        ];
+    }
+
+    /**
+     * Validates unique fields in database on update data
+     * @param mixed $original_value
+     * @param String $attribute
+     * @param mixed $value
+     * @param Closure $fail
+     * @param Class $instance the model class where to find resource under evaluation
+     *
+     * @return void
+     * */
+    private static function validate_different_value($original_value, $attribute, $value, $fail, $instance)
+    {
+        $different_value = $original_value !== $value;
+
+        if ($different_value) {
+            $count_duplicate_value = $instance->where($attribute, $value)->count();
+
+            if ($different_value && $count_duplicate_value > 0) {
+                $fail(trans("exception.{$attribute}_used"));
+            }
+        }
+    }
+
+    public static function update_rules()
+    {
+        return [
+            'old_password' => 'sometimes|min:6|max:45',
+            'password' => 'sometimes|required_with:old_password|min:6|max:45',
+            'name' => 'sometimes|min:2|max:50',
+            'lastname' => 'sometimes|min:2|max:50',
+            'username' => ['sometimes', 'min:3', 'max:40', function ($attribute, $value, $fail) {
+                $original_value = Auth::user()->username;
+                self::validate_different_value($original_value, $attribute, $value, $fail, new User());
+            }],
+            'email' => ['sometimes', 'email:rfc', function ($attribute, $value, $fail) {
+                $original_value = Auth::user()->profile->email;
+                self::validate_different_value($original_value, $attribute, $value, $fail, new Profile());
+            }]
         ];
     }
 
