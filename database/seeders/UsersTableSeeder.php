@@ -38,6 +38,8 @@ class UsersTableSeeder extends Seeder
 
         User::factory()->admin()->active()->create(['username' => 'admin']);
 
+        User::factory()->user()->active()->create(['username' => 'student']);
+
         User::factory()->times(20)->user()->active()->create();
 
         User::factory()->times(20)->user()->banned()->create();

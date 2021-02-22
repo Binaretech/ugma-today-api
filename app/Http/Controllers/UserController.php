@@ -4,15 +4,16 @@ namespace App\Http\Controllers;
 
 use App\Exceptions\DatabaseException;
 use App\Http\Resources\UserResource;
+use App\Models\Profile;
 use App\Traits\TransactionTrait;
 use App\Models\User;
 use Illuminate\Http\Request;
 
 /**
  * @authenticated
- * 
+ *
  * @group User
- * 
+ *
  * User related routes
  */
 class UserController extends Controller
@@ -24,7 +25,7 @@ class UserController extends Controller
      *
      * @param Request $request
      * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
-     * 
+     *
      * @apiResourceCollection  App\Http\Resources\UserResource
      * @apiResourceModel  App\Models\User
      */
@@ -56,7 +57,7 @@ class UserController extends Controller
      *
      * @param  User  $user
      * @return \Illuminate\Http\Response
-     * 
+     *
      * @urlParam user required User by id. Example: 2
      * @response {
      *   "data": {
@@ -83,20 +84,20 @@ class UserController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
-     * 
+     *
      * @bodyParam username optional Change username
      * @bodyParam password optional Change password
      * @bodyParam name optional Change name
      * @bodyParam lastname optional Change lastname
      * @bodyParam email optional Change email. Example lorem@mail.com
-     * 
+     *
      * @response {
      *  "message": "Success."
      * }
      */
     public function update(Request $request)
     {
-        $request_data = $request->validate(User::UPDATE_RULES);
+        $request_data = $request->validate(User::update_rules());
         $user = $request->user();
 
         self::transaction(function () use ($request_data, $user) {
@@ -152,7 +153,7 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\Response
      * @urlParam user required User by id. Example: 2
-     * 
+     *
      * @response {
      *  "message": "Success."
      * }
